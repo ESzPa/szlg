@@ -52,7 +52,7 @@ namespace LogoKaresz
 
 			//Fa(100, 2);
 
-			FaLoop(170, 1, 13);
+			FaLoop(170, 1, 10);
 		}
 	}
 }
