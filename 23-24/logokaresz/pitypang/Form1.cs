@@ -7,22 +7,23 @@ namespace LogoKaresz
 {
 	public partial class Form1 : Form
 	{
-        void Fa(double size, int yrs, bool update=true)
+        void Fa(double size, int yrs)
         {
-            if (yrs == 0) { return; }
-            int fok = yrs-1;
-            if (fok == 0) { fok = 1; }
-            using (new Frissítés(update))
+            if (yrs <= 0) { return; }
+            using (new Átmenetileg(Előre, size))
             {
-                Előre(size);
                 Balra(60);
-                for(int i = 0; i < yrs; i++)
+                for(int i = 0; i < yrs - 1; i++)
                 {
-                    Fa(size / 2, yrs - 1, update);
-                    Jobbra(120/fok);
+                    Fa(size / 2, yrs - 1);
+                    Jobbra(120 / (yrs - 1));
+                    Fa(size/2, yrs - 1);
+                }
+                if (yrs == 1)
+                {
+                    Jobbra(120);
                 }
                 Balra(60);
-                Hátra(size);
             }
             return;
         }
