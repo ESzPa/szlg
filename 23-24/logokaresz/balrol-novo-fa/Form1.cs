@@ -10,21 +10,20 @@ namespace LogoKaresz
 
         void Fa(double size, int yrs, bool update)
         {
-            if (yrs == 0) { return; }
-            int young = yrs-2 < 1 ? 1 : yrs-2;
+            if (yrs <= 0) { return; }
             using (new Frissítés(update))
             {
-                Előre(size);
+                Előre(size/2);
+                Balra(30);
+                Fa(size/2, yrs - 2, update);
+                Jobbra(30);
+                Előre(size / 2);
                 Balra(30);
                 Fa(size / 2, yrs - 1, update);
                 Jobbra(60);
                 Fa(size / 2, yrs - 1, update);
                 Balra(30);
-                Hátra(size/2);
-                Balra(30);
-                Fa(size/2, young, update);
-                Jobbra(30);
-                Hátra(size / 2);
+                Hátra(size);
             }
             return;
         }
@@ -32,7 +31,7 @@ namespace LogoKaresz
         void FELADAT()
 		{
 			Teleport(közép.X, közép.Y+150, észak);
-            Fa(100, 2, false);
+            Fa(100, 10, false);
 		}
 	}
 }
