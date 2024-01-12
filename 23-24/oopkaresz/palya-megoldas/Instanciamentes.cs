@@ -8,6 +8,8 @@ namespace Karesz
 	partial class Form1
 	{
 		#region Robotokra visszavezetett parancsok
+		void Fordulj(int n, int x=1) =>
+			Robot.akit_kiválasztottak.Fordulj(n, x);
 		/// <summary>
 		/// Lép és lerak n alkalommal, paraméter nélkül egyszer
 		/// </summary>
