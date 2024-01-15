@@ -7,15 +7,15 @@ namespace LogoKaresz
 {
 	public partial class Form1 : Form
 	{
-		void Fraktal(double size, int rec) {
+		void Fraktal(double size, int rec, int sign=1) {
 			if (rec <= 1) { Előre(size); return; }
-			Balra(60);
-			Fraktal(size, rec-1);
-			Jobbra(60);
+			Balra(60*sign);
+			Fraktal(size, rec-1, -1);
+			Jobbra(60*sign);
             Fraktal(size, rec - 1);
-			Jobbra(60);
-            Fraktal(size, rec - 1);
-			Balra(60);
+			Jobbra(60 * sign);
+            Fraktal(size, rec - 1, -1);
+			Balra(60 * sign);
         }
 
 
