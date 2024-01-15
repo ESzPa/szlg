@@ -25,7 +25,7 @@ namespace LogoKaresz
 		void FELADAT()
 		{
 			Teleport(közép.X, közép.Y+180, észak);
-			Weirdo(500, 3);
+			Weirdo(2000, 6);
         }
 	}
 }
