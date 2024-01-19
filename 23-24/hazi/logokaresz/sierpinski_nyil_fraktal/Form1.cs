@@ -7,24 +7,35 @@ namespace LogoKaresz
 {
 	public partial class Form1 : Form
 	{
-		void Fraktal(double size, int rec, int sign=1) {
-			if (rec <= 1) { Előre(size); return; }
-			Balra(60*sign);
-			Fraktal(size, rec-1, -1);
-			Jobbra(60*sign);
-            Fraktal(size, rec - 1);
-			Jobbra(60 * sign);
-            Fraktal(size, rec - 1, -1);
-			Balra(60 * sign);
+        void kisfra(uint order, double length, int angle) {
+            if (0 == order) {
+                Előre(length);
+            }
+            else {
+                kisfra(order - 1, length / 2, -angle);
+                Jobbra(angle);
+                kisfra(order - 1, length / 2, angle);
+                Jobbra(angle);
+                kisfra(order - 1, length / 2, -angle);
+            }
+        }
+        void Fraktal(uint order, double length) {
+            if (0 == (order & 1)) {
+                kisfra(order, length, 60);
+            }
+            else{
+                Jobbra(60);
+                kisfra(order, length, 60);
+            }
         }
 
 
-		void FELADAT()
+        void FELADAT()
 		{
-			Teleport(közép.X-250, közép.Y+180, észak);
-			Jobbra(90);
+            //Teleport(közép.X-250, közép.Y+180, észak);
+            Balra(90);
 			using(new Frissítés(false)) {
-				Fraktal(10, 3);
+				Fraktal(7, 300);
 			}
 		}
 	}
