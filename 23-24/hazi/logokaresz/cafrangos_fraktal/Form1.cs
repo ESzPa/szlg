@@ -43,7 +43,7 @@ namespace LogoKaresz
             using (new Frissítés(false)) {
                 //Jobbra(90); Fraktal(300, 6);
                 //Szigetj(100, 6, 6);
-                Szigete(100, 6, 6);
+                //Szigete(100, 6, 6);
             }
 		}
 	}
