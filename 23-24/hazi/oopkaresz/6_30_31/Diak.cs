@@ -12,8 +12,7 @@ namespace Karesz
 {
     public partial class Form1 : Form
     {
-        void harmincegyes_pálya() {
-            #region harmincegyes_pálya
+        void helloworld() {
             while (!Van_e_előttem_fal()) {
                 Előre();
             }
@@ -44,7 +43,6 @@ namespace Karesz
                     Balra();
                 }
             }
-            #endregion
         }
         void DIÁK_ROBOTJAI()
         {
@@ -52,7 +50,7 @@ namespace Karesz
 
             karesz.Feladat = delegate ()
             {
-                harmincegyes_pálya();
+                helloworld();
                 
             };
         }
