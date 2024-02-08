@@ -17,8 +17,8 @@ namespace LogoKaresz
                 {
                     Fa(size / 2, yrs - 1);
                     Jobbra(120 / (yrs - 1));
-                    Fa(size/2, yrs - 1);
                 }
+                Fa(size/2, yrs - 1);
                 if (yrs == 1)
                 {
                     Jobbra(120);
@@ -31,8 +31,10 @@ namespace LogoKaresz
 
         void FELADAT()
 		{
-			Teleport(közép.X, közép.Y+150, észak);
-            Fa(100, 2);
+            using (new Frissítés(false)) {
+                Teleport(közép.X, közép.Y + 150, észak);
+                Fa(100, 5);
+            }
 		}
 	}
 }
