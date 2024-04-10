@@ -1,0 +1,12 @@
+
+
+Függvény _5_10Közötti(list: tömb[szám]): szám
+    Ciklus i:=1-töl list.méret-ig 1-esével:
+        Ha 5 <= list[i] <= 10:
+            _5_10Közötti := Közötti + 1
+        Elágazás vége
+    Ciklus vége
+Függvény vége.
+
+
+Függvény 
