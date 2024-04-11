@@ -1,0 +1,49 @@
+1. Valogassuk ki egy szamtomb negativ es paratlan elemeit
+
+Függvény Elso(szamtomb: tömb[szám]): lista[vector]
+    Ciklus i:=1-töl szamtomb.méret-ig 1-esével:
+        Ha MOD(szamtomb[i], 2) != 0 && szamtomb[i] < 0:
+            Elso.push(szamtomb[i])
+        Elágazás vége
+    Ciklus vége
+Függvény vége.
+
+2. Adott karakterláncok egy tömbje. Csoportosítsd a karakterláncokat a hosszuk szerint: Mekkorak a csoportok elemszamai?
+
+Függvény Masodik(stomb: tömb[karakterlánc]): umap[]
+    Ciklus i:=1-töl stomb.méret-ig 1-esével:
+        Ha Masodik.kulcsai tartalmazza stomb[i].hossz:
+            Masodik[stomb[i].hossz]+=1
+        Különben:
+            Masodik[stomb[i].hossz]:=1
+        Elágazás vége
+    Ciklus vége
+Függvény vége.
+
+3. Egy számtömbben keressük meg a legkisebb elemet
+
+Függvény Harmadik(itomb: tömb[szám]): szám
+    Lokális:
+        Harmadik:=itomb[1]
+    Iteráció e itomb-ban 2 elemtöl:
+        Ha Harmadik > e:
+            Harmadik = e
+        Elágazás vége
+    Iteráció vége
+Függvény vége.
+
+4. Egy karakterlánc listában keressük meg a leghosszabb 'a'-val kezdödö karakterlánc helyét! Ha nincs ilyen az eredmény legyen 0
+
+Függvény Negyedik(stomb: lista[karakterlánc]): szám
+    Negyedik := 0
+    Iteráció elem stomb-ban:
+        Ha elem[1] = 'a' && (Negyedik = 0 || elem.méret > stomb[Negyedik].hossz):
+
+        Elágazás vége
+    Iteráció vége
+Függvény vége.
+
+
+
+    
+
