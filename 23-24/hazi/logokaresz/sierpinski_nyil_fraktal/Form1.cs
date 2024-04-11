@@ -33,7 +33,7 @@ namespace LogoKaresz
         void FELADAT()
 		{
             Teleport(közép.X-250, közép.Y+180, észak);
-            Balra(155);
+            Balra(150);
 			using(new Frissítés(false)) {
 				Fraktal(7, 100);
 			}
