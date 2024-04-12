@@ -1,0 +1,32 @@
+Adott egy szám sorozat.
+
+1. Van-e ebben a sorozatban 0-ra végzödö szám?
+
+Függvény Elso(itomb: tömb[szám]): logikai
+    Lokális:
+        index:=Egész
+    index:=1
+    Ciklus amíg nem MOD(itomb[index], 10) != 0 és index<=itomb.méret():
+        index:=index+1
+    Ciklus vége
+    Elso:= index<=itomb.méret()
+Függvény vége.
+
+2. Igaz-e, hogy mindegyik szám pozitív?
+
+Függvény Masodik(itomb: tömb[szám]): logikai
+    Lokális:
+        index:=Egész
+    index:=1
+    Masodik:=Igaz
+    Ciklus amíg nem itomb[index] < 0 és index<=itomb.méret():
+        index:=index+1
+    Ciklus vége
+    Elso:= nem index<=itomb.méret()
+Függvény vége.
+
+
+3. Add meg az elsö olyan páros számot, ami egy páratlan számot követ
+
+
+
