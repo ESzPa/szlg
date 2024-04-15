@@ -21,6 +21,9 @@ int Feladat2_3(std::vector<Student> students, std::string sex);
 std::vector<std::string> Feladat4_5_6_7(std::vector<Student> students, int num);
 std::vector<std::string> Feladat8_9(std::vector<Student> students);
 int Feladat10_11(std::vector<Student> students, char num);
+int Feladat12_13(std::vector<Student> students, std::string alfabeta);
+int Feladat14_15_16_17(std::vector<Student> students, std::string alfabeta, std::string sex);
+int Feladat18_19_20(std::vector<Student> students, std::string secondlang);
 void StudentPrint(Student student);
 std::vector<Student> Beolvasas(const char* filename);
 
@@ -50,6 +53,15 @@ int main(){
     std::cout << '\n';
     std::cout << "Feladat 10: " << Feladat10_11(students, '1') << '\n';
     std::cout << "Feladat 11: " << Feladat10_11(students, '2') << '\n';
+    std::cout << "Feladat 12: " << Feladat12_13(students, "alfa") << '\n';
+    std::cout << "Feladat 13: " << Feladat12_13(students, "beta") << '\n';
+    std::cout << "Feladat 14: " << Feladat14_15_16_17(students, "alfa", "F") << '\n';
+    std::cout << "Feladat 15: " << Feladat14_15_16_17(students, "beta", "F") << '\n';
+    std::cout << "Feladat 16: " << Feladat14_15_16_17(students, "alfa", "L") << '\n';
+    std::cout << "Feladat 17: " << Feladat14_15_16_17(students, "beta", "L") << '\n';
+    std::cout << "Feladat 18: " << Feladat18_19_20(students, "orosz") << '\n';
+    std::cout << "Feladat 19: " << Feladat18_19_20(students, "olasz") << '\n';
+    std::cout << "Feladat 20: " << Feladat18_19_20(students, "spanyol") << '\n';
 
     return 0;
 }
@@ -88,6 +100,29 @@ int Feladat10_11(std::vector<Student> students, char num){
         if(s.english[0] == num) count++;
     }
     return count;
+}
+
+int Feladat12_13(std::vector<Student> students, std::string alfabeta){
+    int count = 0;
+    for(Student s : students){
+        if(s.mathinfo == alfabeta) count++;
+    }
+    return count;
+}
+
+int Feladat14_15_16_17(std::vector<Student> students, std::string alfabeta, std::string sex){
+    int count = 0;
+    for(Student s : students){
+        if(s.mathinfo == alfabeta && s.sex == sex) count++;
+    }
+    return count;
+}
+
+int Feladat18_19_20(std::vector<Student> students, std::string secondlang){
+    for(Student s : students){
+        if(s.secondlang == secondlang) return 1;
+    }
+    return 0;
 }
 
 void StudentPrint(Student student){
