@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <cmath>
 
 struct Student{
     int id;
@@ -24,6 +25,9 @@ int Feladat10_11(std::vector<Student> students, char num);
 int Feladat12_13(std::vector<Student> students, std::string alfabeta);
 int Feladat14_15_16_17(std::vector<Student> students, std::string alfabeta, std::string sex);
 int Feladat18_19_20(std::vector<Student> students, std::string secondlang);
+int Feladat21(std::vector<Student> students);
+std::string Feladat22(std::vector<Student> students);
+std::vector<std::string> Feladat23(std::vector<Student> students);
 void StudentPrint(Student student);
 std::vector<Student> Beolvasas(const char* filename);
 
@@ -62,6 +66,13 @@ int main(){
     std::cout << "Feladat 18: " << Feladat18_19_20(students, "orosz") << '\n';
     std::cout << "Feladat 19: " << Feladat18_19_20(students, "olasz") << '\n';
     std::cout << "Feladat 20: " << Feladat18_19_20(students, "spanyol") << '\n';
+    std::cout << "Feladat 21: " << Feladat21(students) << '\n';
+    std::cout << "Feladat 22: " << Feladat22(students) << '\n';
+    std::cout << "Feladat 23: ";
+    for(std::string name : Feladat23(students)){
+        std::cout << name << ", ";
+    }
+    std::cout << '\n';
 
     return 0;
 }
@@ -123,6 +134,36 @@ int Feladat18_19_20(std::vector<Student> students, std::string secondlang){
         if(s.secondlang == secondlang) return 1;
     }
     return 0;
+}
+
+int Feladat21(std::vector<Student> students){
+    int max = 0;
+    for(Student s : students){
+        if(s.housemates > max){
+            max = s.housemates;
+        }
+    }
+    return max;
+}
+
+std::string Feladat22(std::vector<Student> students){
+    int index = 0;
+    for(int i = 1; i < students.size()-1; ++i){
+        if(students[index].siblings < students[i].siblings){
+            index = i;
+        }
+    }
+    return students[index].name;
+}
+
+std::vector<std::string> Feladat23(std::vector<Student> students){
+    std::vector<std::string> names;
+    for(Student s : students){
+        if((static_cast<int>(s.english[0]) == 1 || static_cast<int>(s.english[0]) == 2) && s.sex == "L"){
+            names.push_back(s.name);
+        }
+    }
+    return names;
 }
 
 void StudentPrint(Student student){
