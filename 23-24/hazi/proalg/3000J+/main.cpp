@@ -28,6 +28,9 @@ int Feladat18_19_20(std::vector<Student> students, std::string secondlang);
 int Feladat21(std::vector<Student> students);
 std::string Feladat22(std::vector<Student> students);
 std::vector<std::string> Feladat23(std::vector<Student> students);
+std::vector<std::string> Feladat24(std::vector<Student> students);
+int Feladat25(std::vector<Student> students);
+std::vector<std::string> Feladat26_27_28_29_30(std::vector<Student> students, std::string name);
 void StudentPrint(Student student);
 std::vector<Student> Beolvasas(const char* filename);
 
@@ -70,6 +73,39 @@ int main(){
     std::cout << "Feladat 22: " << Feladat22(students) << '\n';
     std::cout << "Feladat 23: ";
     for(std::string name : Feladat23(students)){
+        std::cout << name << ", ";
+    }
+    std::cout << '\n';
+    std::cout << "Feladat 24: ";
+    for(std::string name : Feladat24(students)){
+        std::cout << name << ", ";
+    }
+    std::cout << '\n';
+    std::cout << "Feladat 25: " << Feladat25(students) << '\n';
+    std::cout << "Feladat 26: ";
+    for(std::string name : Feladat26_27_28_29_30(students, "Dári Dóra")){
+        std::cout << name << ", ";
+    }
+    std::cout << '\n';
+    std::cout << "Feladat 27: ";
+    for(std::string name : Feladat26_27_28_29_30(students, "Avon Mór")){
+        std::cout << name << ", ";
+    }
+    std::cout << '\n';
+    std::cout << "Feladat 28: ";
+    for(std::string name : Feladat26_27_28_29_30(students, "Zúz Mara")){
+        std::cout << name << ", ";
+    }
+    std::cout << '\n';
+    std::cout << '\n';
+    std::cout << "Feladat 29: ";
+    for(std::string name : Feladat26_27_28_29_30(students, "Citad Ella")){
+        std::cout << name << ", ";
+    }
+    std::cout << '\n';
+    std::cout << '\n';
+    std::cout << "Feladat 30: ";
+    for(std::string name : Feladat26_27_28_29_30(students, "Hát Izsák")){
         std::cout << name << ", ";
     }
     std::cout << '\n';
@@ -159,12 +195,49 @@ std::string Feladat22(std::vector<Student> students){
 std::vector<std::string> Feladat23(std::vector<Student> students){
     std::vector<std::string> names;
     for(Student s : students){
-        if((static_cast<int>(s.english[0]) == 1 || static_cast<int>(s.english[0]) == 2) && s.sex == "L"){
+        if((s.english.substr(0, 1) == "1" || s.english.substr(0, 1) == "2") && s.sex == "L"){
             names.push_back(s.name);
         }
     }
     return names;
 }
+
+std::vector<std::string> Feladat24(std::vector<Student> students){
+    std::vector<std::string> names;
+    for(Student s : students){
+        if((s.english.substr(0, 1) == "4" || s.english.substr(0, 1) == "3") && (s.siblings == 0 || s.siblings == 2) && s.sex == "F"){
+            names.push_back(s.name);
+        }
+    }
+    return names;
+}
+
+int Feladat25(std::vector<Student> students){
+    int count = 0;
+    for(Student s : students){
+        count += std::abs(s.housemates - s.siblings) != 3;
+    }
+    return count;
+}
+
+std::vector<std::string> Feladat26_27_28_29_30(std::vector<Student> students, std::string name){
+    std::string ddgroup;
+    std::vector<std::string> names;
+    for(Student s : students){
+        if(s.name == name){
+            ddgroup = s.english.substr(0, 1);
+            break;
+        }
+    }
+    for(Student s : students){
+        if(s.english.substr(0, 1) == ddgroup){
+            names.push_back(s.name);
+        }
+    }
+    return names;
+}
+
+
 
 void StudentPrint(Student student){
     std::cout << student.name << " (" << student.sex << "): " << student.id << '\n';
