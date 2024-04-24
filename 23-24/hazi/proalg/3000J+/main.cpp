@@ -5,6 +5,7 @@
 #include <string>
 #include <algorithm>
 #include <cmath>
+#include <unordered_map>
 
 struct Student{
     int id;
@@ -35,6 +36,8 @@ std::string Feladat31(std::vector<Student> students);
 std::vector<std::string> Feladat32(std::vector<Student> students, std::string lang);
 int Feladat33(std::vector<Student> students);
 int Feladat34(std::vector<Student> students);
+std::unordered_map<std::string, int> Feladat35(std::vector<Student> students);
+std::unordered_map<int, int> Feladat36(std::vector<Student> students);
 void StudentPrint(Student student);
 std::vector<Student> Beolvasas(const char* filename);
 
@@ -122,6 +125,18 @@ int main(){
     std::cout << '\n';
     std::cout << "Feladat 33: " << Feladat33(students) << '\n';
     std::cout << "Feladat 34: " << Feladat34(students) << '\n';
+    std::unordered_map<std::string, int> groups1 = Feladat35(students);
+    std::cout << "Feladat 35: ";
+    for(std::pair<std::string, int> e : groups1){
+        std::cout << e.first << ": " << e.second << " || ";
+    }
+    std::cout << "\n";
+    std::unordered_map<int, int> groups2 = Feladat36(students);
+    std::cout << "Feladat 36: ";
+    for(std::pair<int, int> e : groups2){
+        std::cout << e.first << ": " << e.second << " || ";
+    }
+    std::cout << "\n";
 
     return 0;
 }
@@ -292,6 +307,22 @@ int Feladat34(std::vector<Student> students){
         }
     }
     return groups.size();
+}
+
+std::unordered_map<std::string, int> Feladat35(std::vector<Student> students){
+    std::unordered_map<std::string, int> groupnum;
+    for(Student s : students){
+        groupnum[s.english]++;
+    }
+    return groupnum;
+}
+
+std::unordered_map<int, int> Feladat36(std::vector<Student> students){
+    std::unordered_map<int, int> groupnum;
+    for(Student s : students){
+        groupnum[s.housemates]++;
+    }
+    return groupnum;
 }
 
 void StudentPrint(Student student){
