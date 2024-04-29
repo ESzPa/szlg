@@ -38,6 +38,7 @@ int Feladat33(std::vector<Student> students);
 int Feladat34(std::vector<Student> students);
 std::unordered_map<std::string, int> Feladat35(std::vector<Student> students);
 std::unordered_map<int, int> Feladat36(std::vector<Student> students);
+int Feladat37(std::vector<Student> students);
 void StudentPrint(Student student);
 std::vector<Student> Beolvasas(const char* filename);
 
@@ -137,6 +138,7 @@ int main(){
         std::cout << e.first << ": " << e.second << " || ";
     }
     std::cout << "\n";
+    std::cout << "Feladat 37: " << Feladat37(students) << '\n';
 
     return 0;
 }
@@ -323,6 +325,18 @@ std::unordered_map<int, int> Feladat36(std::vector<Student> students){
         groupnum[s.housemates]++;
     }
     return groupnum;
+}
+
+int Feladat37(std::vector<Student> students){
+    std::unordered_map<int, int> siblings;
+    for(Student s : students){
+        siblings[s.siblings]++;
+    }
+    std::pair<int, int> most = {0, 0};
+    for(std::pair<int, int> p : siblings){
+        p.second > most.second ? most = p: most = most;
+    }
+    return most.first;
 }
 
 void StudentPrint(Student student){
