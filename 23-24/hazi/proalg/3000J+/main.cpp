@@ -39,6 +39,9 @@ int Feladat34(std::vector<Student> students);
 std::unordered_map<std::string, int> Feladat35(std::vector<Student> students);
 std::unordered_map<int, int> Feladat36(std::vector<Student> students);
 int Feladat37(std::vector<Student> students);
+std::unordered_map<std::string, int> Feladat38(std::vector<Student> students);
+std::unordered_map<std::string, float> Feladat39(std::vector<Student> students);
+std::unordered_map<std::string, std::vector<std::string>> Feladat40(std::vector<Student> students);
 void StudentPrint(Student student);
 std::vector<Student> Beolvasas(const char* filename);
 
@@ -139,6 +142,28 @@ int main(){
     }
     std::cout << "\n";
     std::cout << "Feladat 37: " << Feladat37(students) << '\n';
+    groups1 = Feladat38(students);
+    std::cout << "Feladat 38: ";
+    for(std::pair<std::string, int> e : groups1){
+        std::cout << e.first << ": " << e.second << " || ";
+    }
+    std::cout << "\n";
+    std::unordered_map<std::string, float> groups3 = Feladat39(students);
+    std::cout << "Feladat 39: ";
+    for(std::pair<std::string, float> e : groups3){
+        std::cout << e.first << ": " << e.second << " || ";
+    }
+    std::cout << "\n";
+    std::unordered_map<std::string, std::vector<std::string>> group5 = Feladat40(students);
+    std::cout << "Feladat 40: ";
+    for(auto e : group5){
+        std::cout << e.first << ": ";
+        for(int i = 0; i < 2; ++i){
+            std::cout << e.second[i] << ", ";
+        }
+        std::cout << " || ";
+    }
+    std::cout << "\n";
 
     return 0;
 }
@@ -337,6 +362,43 @@ int Feladat37(std::vector<Student> students){
         p.second > most.second ? most = p: most = most;
     }
     return most.first;
+}
+
+std::unordered_map<std::string, int> Feladat38(std::vector<Student> students){
+    std::unordered_map<std::string, int> group;
+    for(Student s : students){
+        group[s.english]++;
+    }
+    return group;
+}
+
+std::unordered_map<std::string, float> Feladat39(std::vector<Student> students){
+    std::unordered_map<std::string, std::vector<int>> group;
+    std::unordered_map<std::string, float> avgroup;
+    for(Student s : students){
+        group[s.secondlang].push_back(s.siblings);
+    }
+    for(std::pair<std::string, std::vector<int>> e : group){
+        float av = 0;
+        for(float i : e.second){
+            av += i;
+        }
+        av /= e.second.size();
+        avgroup[e.first] = av;
+    }
+    return avgroup;
+}
+
+std::unordered_map<std::string, std::vector<std::string>> Feladat40(std::vector<Student> students){
+    std::unordered_map<std::string, std::vector<std::string>> group;
+    for(Student s : students){
+        group[s.english].push_back(s.name);
+    }
+    for(auto& e : group){
+        std::sort(e.second.begin(), e.second.end());
+        e.second[1] = e.second[e.second.size()-1];
+    }
+    return group;
 }
 
 void StudentPrint(Student student){
