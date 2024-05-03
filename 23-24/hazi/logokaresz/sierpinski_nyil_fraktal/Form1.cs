@@ -8,7 +8,7 @@ namespace LogoKaresz
 	public partial class Form1 : Form
 	{
         void kisfra(uint order, double length, int angle) {
-            if (0 == order) {
+            if (1 == order) {
                 Előre(length);
             }
             else {
@@ -32,10 +32,10 @@ namespace LogoKaresz
 
         void FELADAT()
 		{
-            Teleport(közép.X-250, közép.Y+180, észak);
-            Balra(150);
+            //Teleport(közép.X-250, közép.Y+180, észak);
+            Jobbra(30);
 			using(new Frissítés(false)) {
-				Fraktal(7, 100);
+				Fraktal(2, 50);
 			}
 		}
 	}
