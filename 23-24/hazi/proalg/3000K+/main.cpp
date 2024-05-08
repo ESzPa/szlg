@@ -39,8 +39,17 @@ std::vector<Student> Beolvasas(const char* filename){
     return students;
 }
 
+void StudentPrint(Student student){
+    std::cout << student.sorszam << "\n";
+    std::cout << student.csapat << "\n";
+    std::cout << student.helyezes << "\n";
+    std::cout << student.ev << "\n";
+    std::cout << student.helyszin << "\n";
+}
+
 int main(){
     std::vector<Student> students = Beolvasas("input.txt");
+
 
     return 0;
 }
