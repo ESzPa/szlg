@@ -25,9 +25,6 @@ int main(){
     }
     f.close();
 
-    int m;
-    cin >> m;
-
     cout << "1. Feladat: " << feladat1(input) << "\n";
     cout << "2. Feladat: " << feladat2(input) << "\n";
     cout << "3. Feladat: " << feladat3(input) << "\n";
@@ -38,7 +35,7 @@ int main(){
     cout << "8. Feladat: " << feladat8(input) << "\n";
     cout << "9. Feladat: " << feladat9(input) << "\n";
     cout << "10. Feladat: "; feladat10(input); cout << "\n";
-    cout << "11. Feladat: "; feladat11(input, m); cout << "\n";
+    cout << "11. Feladat: "; feladat11(input); cout << "\n";
 
     return 0;
 }
@@ -115,10 +112,12 @@ void feladat10(vector<int> input){
         }
     }
 }
-void feladat11(vector<int> input, int m){
+void feladat11(vector<int> input){
+    int m;
+    cin >> m;
     unordered_map<int, int> map;
     for(int e : input){
-        map[e % m]++;
+        map[e % m] += e;
     }
     for(auto e : map){
         cout << e.first << ": " << e.second << " || ";
