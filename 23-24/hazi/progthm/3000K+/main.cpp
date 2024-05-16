@@ -149,10 +149,25 @@ int Feladat32_36(std::vector<Sor> sorok, std::string country){
 }
 
 void runFeladat32_36(std::vector<Sor> sorok, int num, std::string country){
-    std::cout << "Feladat " << num << ": " << country << '\n';
+    std::cout << "Feladat " << num << ": " << Feladat32_36(sorok, country) << '\n';
+}
+
+int Feladat37_42(std::vector<Sor> sorok, std::string country){
+    int best = 420;
+    for(Sor s : sorok){
+        if(s.helyezes < best && s.csapat == country){
+            best = s.helyezes;
+        }
+    }
+    return best;
+}
+
+void runFeladat37_42(std::vector<Sor> sorok, int num, std::string country){
+    std::cout << "Feladat " << num << ": " << Feladat37_42(sorok, country) << '\n';
 }
 
 int main(){
+    //todo merge runfeladats
     std::vector<Sor> sorok = Beolvasas("input.txt");
 
     runFeladat1_6(sorok, 1, "Magyarország");
@@ -195,6 +210,13 @@ int main(){
     runFeladat32_36(sorok, 34, "Svájc");
     runFeladat32_36(sorok, 35, "Brazíla");
     runFeladat32_36(sorok, 36, "Argentína");
+    runFeladat37_42(sorok, 37, "Magyarország");
+    runFeladat37_42(sorok, 38, "Mongólia");
+    runFeladat37_42(sorok, 39, "Svájc");
+    runFeladat37_42(sorok, 40, "Brazília");
+    runFeladat37_42(sorok, 41, "Argentína");
+    std::cin >> str;
+    runFeladat37_42(sorok, 42, str);
 
 
     return 0;
