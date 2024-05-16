@@ -114,7 +114,7 @@ void runFeladat19_23(std::vector<Sor> sorok, int num, int year){
     std::cout << "Feladat " << num << ": " << Feladat19_23(sorok, year) << '\n';
 }
 
-int Feladat24_29(std::vector<Sor> sorok, std::string country){
+int Feladat24_30(std::vector<Sor> sorok, std::string country){
     int count = 0;
     for(Sor s : sorok){
         if(s.csapat == country && s.helyezes == 2){
@@ -124,7 +124,7 @@ int Feladat24_29(std::vector<Sor> sorok, std::string country){
     return count;
 }
 
-void runFeladat24_29(std::vector<Sor> sorok, int num, std::string country){
+void runFeladat24_30(std::vector<Sor> sorok, int num, std::string country){
     std::cout << "Feladat " << num << ": " << country << '\n';
 }
 
@@ -157,13 +157,14 @@ int main(){
     runFeladat19_23(sorok, 21, 1950);
     runFeladat19_23(sorok, 22, 1960);
     runFeladat19_23(sorok, 23, 1970);
-    runFeladat24_29(sorok, 24, "Magyarország");
-    runFeladat24_29(sorok, 25, "Mongólia");
-    runFeladat24_29(sorok, 26, "Svájc");
-    runFeladat24_29(sorok, 27, "Brazília");
-    runFeladat24_29(sorok, 28, "Németország");
-    runFeladat24_29(sorok, 29, "Argentína");
-
+    runFeladat24_30(sorok, 24, "Magyarország");
+    runFeladat24_30(sorok, 25, "Mongólia");
+    runFeladat24_30(sorok, 26, "Svájc");
+    runFeladat24_30(sorok, 27, "Brazília");
+    runFeladat24_30(sorok, 28, "Németország");
+    runFeladat24_30(sorok, 29, "Argentína");
+    std::cin >> str;
+    runFeladat24_30(sorok, 30, str);
 
     return 0;
 }
