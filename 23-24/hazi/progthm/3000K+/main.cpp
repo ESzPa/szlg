@@ -102,6 +102,18 @@ void runFeladat13_18(std::vector<Sor> sorok, int num, std::string country){
     std::cout << "-------------------------------------\n";
 }
 
+std::string Feladat19_23(std::vector<Sor> sorok, int year){
+    int i = 0;
+    while(i < sorok.size()-1){
+        ++i;
+    }
+    return sorok[i].csapat;
+}
+
+void runFeladat19_23(std::vector<Sor> sorok, int num, int year){
+    std::cout << "Feladat " << num << ": " << Feladat19_23(sorok, year) << '\n';
+}
+
 int main(){
     std::vector<Sor> sorok = Beolvasas("input.txt");
 
@@ -126,6 +138,12 @@ int main(){
     runFeladat13_18(sorok, 17, "Mongólia");
     std::cin >> str;
     runFeladat13_18(sorok, 18, str);
+    runFeladat19_23(sorok, 19, 1930);
+    runFeladat19_23(sorok, 20, 1940);
+    runFeladat19_23(sorok, 21, 1950);
+    runFeladat19_23(sorok, 22, 1960);
+    runFeladat19_23(sorok, 23, 1970);
+
 
     return 0;
 }
