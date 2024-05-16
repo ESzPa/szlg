@@ -128,6 +128,30 @@ void runFeladat24_30(std::vector<Sor> sorok, int num, std::string country){
     std::cout << "Feladat " << num << ": " << country << '\n';
 }
 
+int Feladat31(std::vector<Sor> sorok){
+    int earliest = 3000;
+    for(Sor s : sorok){
+        if(s.ev < earliest){
+            earliest = s.ev;
+        }
+    }
+    return earliest;
+}
+
+int Feladat32_36(std::vector<Sor> sorok, std::string country){
+    int count = 0;
+    for(Sor s : sorok){
+        if(s.csapat == country && s.helyezes == 1){
+            count++;
+        }
+    }
+    return count;
+}
+
+void runFeladat32_36(std::vector<Sor> sorok, int num, std::string country){
+    std::cout << "Feladat " << num << ": " << country << '\n';
+}
+
 int main(){
     std::vector<Sor> sorok = Beolvasas("input.txt");
 
@@ -165,6 +189,13 @@ int main(){
     runFeladat24_30(sorok, 29, "Argentína");
     std::cin >> str;
     runFeladat24_30(sorok, 30, str);
+    std::cout << "Feladat 31: " << Feladat31(sorok) << '\n';
+    runFeladat32_36(sorok, 32, "Magyarország");
+    runFeladat32_36(sorok, 33, "Mongólia");
+    runFeladat32_36(sorok, 34, "Svájc");
+    runFeladat32_36(sorok, 35, "Brazíla");
+    runFeladat32_36(sorok, 36, "Argentína");
+
 
     return 0;
 }
