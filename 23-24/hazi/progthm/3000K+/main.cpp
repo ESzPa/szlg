@@ -210,7 +210,11 @@ std::vector<Sor> Feladat50_52(std::vector<Sor> sorok, std::string country){
 }
 
 void runFeladat50_52(std::vector<Sor> sorok, int num, std::string country){
-
+    std::vector<Sor> tempsorok = Feladat50_52(sorok, country);
+    std::cout << "Feladat " << num << ":\n";
+    for(Sor s : tempsorok){
+        std::cout << s.csapat << " (" << s.ev << ")\n";
+    }
 }
 
 int main(){
@@ -275,7 +279,6 @@ int main(){
     runFeladat50_52(sorok, 50, "Brazília");
     runFeladat50_52(sorok, 51, "Argentína");
     runFeladat50_52(sorok, 52, "Magyarország");
-
 
     return 0;
 }
