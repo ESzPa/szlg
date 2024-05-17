@@ -41,7 +41,7 @@ std::unordered_map<int, int> Feladat36(std::vector<Student> students);
 int Feladat37(std::vector<Student> students);
 std::unordered_map<std::string, int> Feladat38(std::vector<Student> students);
 std::unordered_map<std::string, float> Feladat39(std::vector<Student> students);
-std::unordered_map<std::string, std::vector<std::string>> Feladat40(std::vector<Student> students);
+std::pair<std::string, std::string> Feladat40(std::vector<Student> students);
 void StudentPrint(Student student);
 std::vector<Student> Beolvasas(const char* filename);
 
@@ -154,16 +154,8 @@ int main(){
         std::cout << e.first << ": " << e.second << " || ";
     }
     std::cout << "\n";
-    std::unordered_map<std::string, std::vector<std::string>> group5 = Feladat40(students);
-    std::cout << "Feladat 40: ";
-    for(auto e : group5){
-        std::cout << e.first << ": ";
-        for(int i = 0; i < 2; ++i){
-            std::cout << e.second[i] << ", ";
-        }
-        std::cout << " || ";
-    }
-    std::cout << "\n";
+    std::pair<std::string, std::string> group5 = Feladat40(students);
+    std::cout << "Feladat 40: " << group5.first << ", " << group5.second << '\n';
 
     return 0;
 }
@@ -389,16 +381,25 @@ std::unordered_map<std::string, float> Feladat39(std::vector<Student> students){
     return avgroup;
 }
 
-std::unordered_map<std::string, std::vector<std::string>> Feladat40(std::vector<Student> students){
-    std::unordered_map<std::string, std::vector<std::string>> group;
+std::pair<std::string, std::string> Feladat40(std::vector<Student> students){
+    std::vector<std::string> group;
     for(Student s : students){
-        group[s.english].push_back(s.name);
+        group.push_back(s.name);
     }
-    for(auto& e : group){
-        std::sort(e.second.begin(), e.second.end());
-        e.second[1] = e.second[e.second.size()-1];
+    std::string min = group[0];
+    for(int i = 1; i < group.size(); ++i){
+        if(min > group[i]){
+            min = group[i];
+        }
     }
-    return group;
+    std::string max = group[0];
+    for(int i = 1; i < group.size(); ++i){
+        if(max < group[i]){
+            max = group[i];
+        }
+    }
+    std::pair<std::string, std::string> _ = {min, max};
+    return _;
 }
 
 void StudentPrint(Student student){
