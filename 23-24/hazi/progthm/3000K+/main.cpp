@@ -241,6 +241,31 @@ void runFeladat53_57(std::vector<Sor> sorok, int num, std::string country){
     }
 }
 
+Sor Feladat58(std::vector<Sor> sorok){
+    std::unordered_map<std::string, int> vbwinners;
+    for(Sor s : sorok){
+        if(s.helyezes == 1){
+            vbwinners[s.csapat]++;
+        }
+        if(vbwinners[s.csapat] > 1){
+            return s;
+        }
+    }
+}
+
+Sor Feladat59(std::vector<Sor> sorok){
+    std::unordered_map<std::string, int> vbcountries;
+    std::vector<int> years;
+    for(Sor s : sorok){
+        !invector(years, s.ev) ? vbcountries[s.helyszin]++ : false;
+        if(vbcountries[s.helyszin] > 1){
+            return s;
+        }
+        years.push_back(s.ev);
+    }
+}
+
+
 int main(){
     std::vector<Sor> sorok = Beolvasas("input.txt");
 
@@ -309,7 +334,8 @@ int main(){
     runFeladat53_57(sorok, 56, "Barzília"); //Így van a feladatban :)
     std::cin >> str;
     runFeladat53_57(sorok, 57, str);
-
+    std::cout << "Feladat 58: " << Feladat58(sorok).csapat << '\n';
+    std::cout << "Feladat 59: " << Feladat59(sorok).helyszin << '\n';
 
     return 0;
 }
