@@ -217,6 +217,30 @@ void runFeladat50_52(std::vector<Sor> sorok, int num, std::string country){
     }
 }
 
+std::vector<Sor> Feladat53_57(std::vector<Sor> sorok, std::string country){
+    std::vector<int> tempsorok;
+    std::vector<Sor> returnsorok;
+    for(Sor s : sorok){
+        if(s.helyezes <= 2 && s.csapat == country){
+            tempsorok.push_back(s.ev);
+        }
+    }
+    for(Sor s : sorok){
+        if(s.csapat != country && s.helyezes <= 2 && invector(tempsorok, s.ev)){
+            returnsorok.push_back(s);
+        }
+    }
+    return returnsorok;
+}
+
+void runFeladat53_57(std::vector<Sor> sorok, int num, std::string country){
+    std::vector<Sor> _;
+    std::cout << "Feladat " << num << ":\n";
+    for(Sor s : _){
+        std::cout << s.csapat << " (" << s.ev << ")\n";
+    }
+}
+
 int main(){
     std::vector<Sor> sorok = Beolvasas("input.txt");
 
@@ -279,6 +303,13 @@ int main(){
     runFeladat50_52(sorok, 50, "Brazília");
     runFeladat50_52(sorok, 51, "Argentína");
     runFeladat50_52(sorok, 52, "Magyarország");
+    runFeladat53_57(sorok, 53, "Magyarország");
+    runFeladat53_57(sorok, 54, "Mongólia");
+    runFeladat53_57(sorok, 55, "Svájc");
+    runFeladat53_57(sorok, 56, "Barzília"); //Így van a feladatban :)
+    std::cin >> str;
+    runFeladat53_57(sorok, 57, str);
+
 
     return 0;
 }
