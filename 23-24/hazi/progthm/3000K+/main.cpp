@@ -177,7 +177,7 @@ std::vector<Sor> Feladat44_49(std::vector<Sor> sorok, std::string country){
 }
 
 void runFeladat44_49(std::vector<Sor> sorok, int num, std::string country){
-    std::vector<Sor> fsorok = Feladat44_49(sorok);
+    std::vector<Sor> fsorok = Feladat44_49(sorok, country);
     std::cout << "Feladat " << num << ": ";
     for(Sor s : fsorok){
         std::cout << s.csapat << ", ";
@@ -185,8 +185,35 @@ void runFeladat44_49(std::vector<Sor> sorok, int num, std::string country){
     std::cout << '\n';
 }
 
+bool invector(std::vector<int> v, int num){
+    int i = 0;
+    while(i < v.size() && v[i] != num){
+        ++i;
+    }
+    return i < v.size();
+}
+
+std::vector<Sor> Feladat50_52(std::vector<Sor> sorok, std::string country){
+    std::vector<int> temp;
+    std::vector<Sor> returnsorok;
+    for(Sor s : sorok){
+        if(s.csapat == country && s.helyezes <= 3){
+            temp.push_back(s.ev);
+        }
+    }
+    for(Sor s : sorok){
+        if(s.helyezes == 1 && invector(temp, s.ev)){
+            returnsorok.push_back(s);
+        }
+    }
+    return returnsorok;
+}
+
+void runFeladat50_52(std::vector<Sor> sorok, int num, std::string country){
+
+}
+
 int main(){
-    //todo merge runfeladats
     std::vector<Sor> sorok = Beolvasas("input.txt");
 
     runFeladat1_6(sorok, 1, "Magyarország");
@@ -245,6 +272,9 @@ int main(){
     runFeladat44_49(sorok, 48, "Egyesült Államok");
     std::cin >> str;
     runFeladat44_49(sorok, 49, str);
+    runFeladat50_52(sorok, 50, "Brazília");
+    runFeladat50_52(sorok, 51, "Argentína");
+    runFeladat50_52(sorok, 52, "Magyarország");
 
 
     return 0;
