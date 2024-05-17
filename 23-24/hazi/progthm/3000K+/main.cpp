@@ -148,7 +148,7 @@ int Feladat32_36(std::vector<Sor> sorok, std::string country){
     return count;
 }
 
-void runFeladat32_36(std::vector<Sor> sorok, int num, std::string country){
+void runFeladat32_36__43(std::vector<Sor> sorok, int num, std::string country){
     std::cout << "Feladat " << num << ": " << Feladat32_36(sorok, country) << '\n';
 }
 
@@ -164,6 +164,25 @@ int Feladat37_42(std::vector<Sor> sorok, std::string country){
 
 void runFeladat37_42(std::vector<Sor> sorok, int num, std::string country){
     std::cout << "Feladat " << num << ": " << Feladat37_42(sorok, country) << '\n';
+}
+
+std::vector<Sor> Feladat44_49(std::vector<Sor> sorok, std::string country){
+    std::vector<Sor> returnsorok;
+    for(Sor s : sorok){
+        if(country == s.helyszin){
+            returnsorok.push_back(s);
+        }
+    }
+    return returnsorok;
+}
+
+void runFeladat44_49(std::vector<Sor> sorok, int num, std::string country){
+    std::vector<Sor> fsorok = Feladat44_49(sorok);
+    std::cout << "Feladat " << num << ": ";
+    for(Sor s : fsorok){
+        std::cout << s.csapat << ", ";
+    }
+    std::cout << '\n';
 }
 
 int main(){
@@ -205,11 +224,11 @@ int main(){
     std::cin >> str;
     runFeladat24_30(sorok, 30, str);
     std::cout << "Feladat 31: " << Feladat31(sorok) << '\n';
-    runFeladat32_36(sorok, 32, "Magyarország");
-    runFeladat32_36(sorok, 33, "Mongólia");
-    runFeladat32_36(sorok, 34, "Svájc");
-    runFeladat32_36(sorok, 35, "Brazíla");
-    runFeladat32_36(sorok, 36, "Argentína");
+    runFeladat32_36__43(sorok, 32, "Magyarország");
+    runFeladat32_36__43(sorok, 33, "Mongólia");
+    runFeladat32_36__43(sorok, 34, "Svájc");
+    runFeladat32_36__43(sorok, 35, "Brazíla");
+    runFeladat32_36__43(sorok, 36, "Argentína");
     runFeladat37_42(sorok, 37, "Magyarország");
     runFeladat37_42(sorok, 38, "Mongólia");
     runFeladat37_42(sorok, 39, "Svájc");
@@ -217,6 +236,15 @@ int main(){
     runFeladat37_42(sorok, 41, "Argentína");
     std::cin >> str;
     runFeladat37_42(sorok, 42, str);
+    std::cin >> str;
+    runFeladat32_36__43(sorok, 43, str);
+    runFeladat44_49(sorok, 44, "Anglia");
+    runFeladat44_49(sorok, 45, "Magyarország");
+    runFeladat44_49(sorok, 46, "Németország");
+    runFeladat44_49(sorok, 47, "Brazília");
+    runFeladat44_49(sorok, 48, "Egyesült Államok");
+    std::cin >> str;
+    runFeladat44_49(sorok, 49, str);
 
 
     return 0;
