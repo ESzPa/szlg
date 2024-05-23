@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cmath>
 #include <unordered_map>
-
+#include <map>
 
 class Sor{
     public:
@@ -15,7 +15,40 @@ class Sor{
         int helyezes;
         int ev;
         std::string helyszin;
+
+    Sor() : sorszam(0), csapat(""), helyezes(0), ev(0), helyszin("") {}
+
+    Sor(int s, const std::string& c, int h, int e, const std::string& he)
+        : sorszam(s), csapat(c), helyezes(h), ev(e), helyszin(he) {}
+
+    bool operator==(const Sor& other) const {
+        return sorszam == other.sorszam &&
+               csapat == other.csapat &&
+               helyezes == other.helyezes &&
+               ev == other.ev &&
+               helyszin == other.helyszin;
+    }
 };
+
+struct des {
+    bool operator()(const std::string& a, const std::string& b) const {
+        return a > b; 
+    }
+};
+
+namespace std {
+    template <>
+    struct hash<Sor> {
+        size_t operator()(const Sor& sor) const {
+            size_t h1 = hash<int>()(sor.sorszam);
+            size_t h2 = hash<std::string>()(sor.csapat);
+            size_t h3 = hash<int>()(sor.helyezes);
+            size_t h4 = hash<int>()(sor.ev);
+            size_t h5 = hash<std::string>()(sor.helyszin);
+            return h1 ^ h2 ^ h3 ^ h4 ^ h5; // Combine the hash values
+        }
+    };
+}
 
 std::vector<Sor> Beolvasas(const char* filename){
     std::vector<Sor> sorok;
@@ -265,6 +298,17 @@ Sor Feladat59(std::vector<Sor> sorok){
     }
 }
 
+std::pair<Sor, int> Feladat60(std::vector<Sor> sorok){
+    std::map<Sor, int, des> helyezes;
+    for(Sor s : sorok){
+        if(s.helyezes == 1){
+            helyezes[s]++;
+        }
+    }
+    std::pair<Sor, int> ret = {helyezes.begin()->first, helyezes.begin()->second};
+    return ret;
+}
+
 
 int main(){
     std::vector<Sor> sorok = Beolvasas("input.txt");
@@ -336,6 +380,8 @@ int main(){
     runFeladat53_57(sorok, 57, str);
     std::cout << "Feladat 58: " << Feladat58(sorok).csapat << '\n';
     std::cout << "Feladat 59: " << Feladat59(sorok).helyszin << '\n';
+    auto s = Feladat60(sorok);
+    std::cout << "Feladat 60: " << s.first.csapat << ", " << s.second << '\n';
 
     return 0;
 }
