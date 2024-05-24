@@ -298,10 +298,10 @@ Sor Feladat59(std::vector<Sor> sorok){
     }
 }
 
-std::pair<Sor, int> Feladat60(std::vector<Sor> sorok){
+std::pair<Sor, int> Feladat60_2(std::vector<Sor> sorok, int num){
     std::map<Sor, int, des> helyezes;
     for(Sor s : sorok){
-        if(s.helyezes == 1){
+        if(s.helyezes == num){
             helyezes[s]++;
         }
     }
@@ -309,6 +309,34 @@ std::pair<Sor, int> Feladat60(std::vector<Sor> sorok){
     return ret;
 }
 
+std::pair<Sor, int> Feladat61(std::vector<Sor> sorok){
+    std::map<Sor, int, des> helyszin;
+    for(Sor s : sorok){
+        helyszin[s]++;
+    }
+    std::pair<Sor, int> ret = {helyszin.begin()->first, helyszin.begin()->second};
+    return ret;
+}
+
+std::map<Sor, int> Feladat63(std::vector<Sor> sorok){
+    std::map<Sor, int> orszag;
+    for(Sor s : sorok){
+        orszag[s]++;
+    }
+    return orszag;
+}
+
+std::vector<Sor> Feladat64_5(std::vector<Sor> sorok){
+    std::unordered_map<Sor, int> map;
+    std::vector<Sor> ret;
+    for(Sor s : sorok){
+        map[s]++;
+    }
+    for(std::pair<Sor, int> p : map){
+        ret.push_back(p.first);
+    }
+    return ret;
+}
 
 int main(){
     std::vector<Sor> sorok = Beolvasas("input.txt");
@@ -380,8 +408,27 @@ int main(){
     runFeladat53_57(sorok, 57, str);
     std::cout << "Feladat 58: " << Feladat58(sorok).csapat << '\n';
     std::cout << "Feladat 59: " << Feladat59(sorok).helyszin << '\n';
-    auto s = Feladat60(sorok);
+    auto s = Feladat60_2(sorok, 1);
     std::cout << "Feladat 60: " << s.first.csapat << ", " << s.second << '\n';
+    s = Feladat61(sorok);
+    std::cout << "Feladat 61: " << s.first.csapat << ", " << s.second << '\n';
+    auto s = Feladat60_2(sorok, 2);
+    std::cout << "Feladat 62: " << s.first.csapat << ", " << s.second << '\n';
+    std::map<Sor, int> s2 = Feladat63(sorok);
+    std::cout << "Feladat 63:\n";
+    for(std::pair<Sor, int> p : s2)
+    {
+        std::cout << p.first.csapat << ": " << p.second << '\n';
+    } 
+    auto s3 = Feladat64_5(sorok);
+    std::cout << "Feladat 64:\n";
+    for(Sor s : s3){
+        std::cout << s.csapat << '\n';
+    }
+    std::cout << "Feladat 65:\n";
+    for(Sor s : s3){
+        std::cout << s.csapat << '\n';
+    }
 
     return 0;
 }
