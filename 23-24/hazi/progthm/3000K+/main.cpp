@@ -338,6 +338,14 @@ std::vector<Sor> Feladat64_5(std::vector<Sor> sorok){
     return ret;
 }
 
+int Feladat66(std::vector<Sor> sorok){
+    std::map<int, int, des> dates;
+    for(Sor s : sorok){
+        dates[s.ev]++;
+    }
+    return dates.begin()->first;
+}
+
 int main(){
     std::vector<Sor> sorok = Beolvasas("input.txt");
 
@@ -429,6 +437,7 @@ int main(){
     for(Sor s : s3){
         std::cout << s.csapat << '\n';
     }
+    std::cout << "Feladat 66: " << Feladat66(sorok) <<'\n';
 
     return 0;
 }
