@@ -45,7 +45,7 @@ namespace std {
             size_t h3 = hash<int>()(sor.helyezes);
             size_t h4 = hash<int>()(sor.ev);
             size_t h5 = hash<std::string>()(sor.helyszin);
-            return h1 ^ h2 ^ h3 ^ h4 ^ h5; // Combine the hash values
+            return h1 ^ h2 ^ h3 ^ h4 ^ h5; 
         }
     };
 }
@@ -344,6 +344,14 @@ int Feladat66(std::vector<Sor> sorok){
         dates[s.ev]++;
     }
     return dates.begin()->first;
+}
+
+int Feladat67(std::vector<Sor> sorok){
+    std::map<int, int, des> dates;
+    for(Sor s : sorok){
+        std::string date = s.ev;
+        dates[(date[0]+'0')];
+    }
 }
 
 int main(){
