@@ -1,0 +1,33 @@
+hajoaz	nev
+23	Hajógyár
+41	FK 316
+14	Busa
+87	Morgó
+29	Mainau
+40	Balaton I.
+56	Big Boy
+93	Prága
+28	Komp II
+85	Ercsi
+2	Megyer
+35	FK 314
+37	Biológia
+15	Horány
+24	Óbuda
+40	Kaptan Sevket Iyidere
+50	Szabadság
+84	Szentendre
+85	LI
+39	Komp IV
+84	LV
+90	Dunakeszi
+42	Szent Miklós
+55	Galyatető
+75	Épvízkör 1
+41	Széchenyi
+92	Veránka III
+31	Komp III
+15	Zebegény
+62	BHV I.
+54	Yacht I.
+83	Balaton

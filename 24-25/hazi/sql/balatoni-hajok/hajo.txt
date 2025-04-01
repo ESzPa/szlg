@@ -1,0 +1,94 @@
+az	nev	tipus	tulaz	uzemel
+15	Ederics	személyhajó	1	-1
+77	Épvízkör 4	uszály	5	-1
+53	Nemere II.	vitorlás		-1
+3	101-Z toló-önjáró uszály	önjáró uszály	2	-1
+20	Hableány	személyhajó	6	-1
+4	Almádi	személyhajó	1	-1
+91	Szemes	személyhajó	1	0
+52	Katamarán	vitorlás	9	-1
+11	Csiga-Biga	kisgéphajó	4	-1
+69	465 uszály	uszály	1	-1
+46	VI-736-Z önjáró tankuszály	önjáró uszály	8	-1
+54	Öszöd	vitorlás	12	-1
+88	Földvár	személyhajó	1	0
+35	Sió	szolgálati hajó	1	-1
+73	Óriás uszály	uszály	2	-1
+12	Csobánc	személyhajó	1	-1
+55	Phoenix	vitorlás	13	-1
+18	Füred	személyhajó	1	-1
+66	442 uszály	uszály	1	-1
+21	Helka	személyhajó	1	-1
+42	Tátika	személyhajó	9	-1
+14	Echo	szolgálati hajó	2	-1
+17	Fonyód	személyhajó	1	-1
+59	Talizmán	vitorlás	14	-1
+72	107 uszály	uszály		-1
+44	Tünde	személyhajó	1	-1
+67	443 uszály	uszály	1	-1
+34	Révfülöp	személyhajó	1	-1
+76	Épvízkör 3	uszály	5	-1
+43	Thetis	kisgéphajó	10	-1
+36	Siófok	személyhajó	1	-1
+22	Hévíz	személyhajó	1	-1
+79	254 strandhomokozó 	úszó munkagép	1	-1
+33	Scharnebeck 	szolgálati hajó	7	-1
+65	102-Z bárka 	uszály	2	-1
+70	Óriás 469 uszály	uszály	2	-1
+40	Szent Miklós	személyhajó	1	-1
+31	Kossuth Lajos	komp	1	-1
+83	Beloiannisz	személyhajó	1	0
+25	Jókai	személyhajó	3	-1
+89	Csopak	személyhajó	1	0
+45	Tündér	kisgéphajó	11	-1
+61	Balatonboglár	halászhajó	15	-1
+50	Zánka	személyhajó	9	-1
+39	Széchenyi István	komp	1	-1
+1	Baross Gábor	komp	1	-1
+10	Calypso	kisgéphajó	1	-1
+48	Z-424 önjáró uszály	önjáró uszály	1	-1
+47	Vízvédelem	szolgálati hajó	8	-1
+6	Arács	személyhajó	1	-1
+38	Szántód	személyhajó	1	-1
+27	Keszthely	személyhajó	1	-1
+81	Szerhajó	úszó munkagép	1	-1
+26	Kelén	személyhajó	1	-1
+37	St Benedek	személyhajó	4	-1
+7	Badacsony	személyhajó	1	-1
+74	51 uszály	uszály	1	-1
+68	463 uszály	uszály	1	-1
+56	Sirocco	vitorlás		-1
+93	Balaton II.	személyhajó	7	0
+86	Szárszó	személyhajó	1	0
+2	Akali	személyhajó	1	-1
+84	Gulács	személyhajó	1	0
+13	Csongor	személyhajó	1	-1
+75	Góliát	uszály	2	-1
+41	Szikra	szolgálati hajó	8	-1
+82	Radzeer	kisgéphajó		0
+71	103 uszály	uszály	5	-1
+30	Koloska	kisgéphajó		-1
+60	Róza	vitorlás	3	-1
+29	Klára	személyhajó	3	-1
+58	Szaturnusz	vitorlás	1	-1
+62	Vonyarc	halászhajó	15	-1
+24	Jégmadár	szolgálati hajó	2	-1
+63	Busa	halászhajó	15	-1
+64	Angolna	halászhajó	15	-1
+32	Lelle	személyhajó	1	-1
+87	Tihany II	személyhajó	1	0
+90	Dörgicse	személyhajó	1	0
+49	Z-426 önjáró uszály	önjáró uszály	1	-1
+51	Juditta	vitorlás	10	-1
+85	Bakony	személyhajó	1	0
+9	Brutus	kisgéphajó		-1
+57	Sissy hercegnő	vitorlás	6	-1
+80	50-II úszódaru 	úszó munkagép	1	-1
+28	Kisfaludy Sándor	komp	1	-1
+16	Érd	szolgálati hajó	5	-1
+8	Balaton	személyhajó	3	-1
+78	211 elevátor 	úszó munkagép	1	-1
+92	Kenese	személyhajó	16	0
+23	Izsó	szolgálati hajó	2	-1
+5	Aqua Pannonia 	személyhajó	1	-1
+19	Györök	személyhajó	1	-1

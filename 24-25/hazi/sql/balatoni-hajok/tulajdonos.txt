@@ -1,0 +1,17 @@
+az	nev	varos
+1	Balatoni Hajózási Zrt.	Siófok
+2	Óriás-Line Kft.	Siófok
+3	3Hajózási Kft.	Balatonfüred
+4	Egyéni vállalkozó	Siófok
+5	Aqua-Sió Vízépítő Kft.	Siófok
+6	Balatoni Sétahajózási Kft.	Keszthely
+7	Vízirendőrség	Siófok
+8	Közép-dunántúli Környezetvédelmi és Vízügyi Igazgatóság	Siófok
+9	Zánkai GyIC Közhasznú Kft.	Zánka
+10	Pelsoline Hajózási Kft.	Gyenesdiás
+11	Úszóstég Kft.	Balatonalmádi
+12	Nautika Hajózási Kft.	Balatonfüred
+13	Yachtparty Hajózási Kft.	Balatonboglár
+14	T Flotta Hajózási és Idegenforgalmi Szolgáltató Kft.	Siófok
+15	Balatoni Halászati Zrt.	Siófok
+16	Magyar Honvédség Üdülője	Balatonkenese
