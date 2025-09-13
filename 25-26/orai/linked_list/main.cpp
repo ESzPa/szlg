@@ -30,6 +30,20 @@ private:
     Node<T> head;
     size_t size = 0;
 
+    Node<T>* smart_index(size_t index){
+        if(index >= this->size) throw std::out_of_range("LinkedList: Index out of range");
+        if(index < this->size/2){
+            Node<T>* cur = this->head.next;
+            for(size_t i = 0; i < index; ++i) cur = cur->next;
+            return cur;
+        }
+        else{
+            Node<T>* cur = this->head.prev;
+            for(size_t i = 0; i < this->size-index-1; ++i) cur = cur->prev;
+            return cur;
+        }
+    }
+
 public:
     LinkedList() = default;
 
@@ -45,25 +59,19 @@ public:
     Iterator end() { return Iterator(&this->head); }
 
     T& operator[](size_t index){
-        if(index >= this->size) throw std::out_of_range("LinkedList: Index out of range");
-        Node<T>* cur = this->head.next;
-        for(size_t i = 0; i < index; ++i) cur = cur->next;
-        return cur->value;
+        return smart_index(index)->value;
     }
-
+    
     const T& operator[](size_t index) const{
-        if(index >= this->size) throw std::out_of_range("LinkedList: Index out of range");
-        const Node<T>* cur = this->head.next;
-        for(size_t i = 0; i < index; ++i) cur = cur->next;
-        return cur->value;
+        return smart_index(index)->value;
     }
-
-    T& Front() const{
+    
+    T& Front(){
         if(this->head.next == &this->head) throw std::out_of_range("LinkedList: List is empty");
         return this->head.next->value;
     }
 
-    T& Back() const{
+    T& Back(){
         if(this->head.prev == &this->head) throw std::out_of_range("LinkedList: List is empty");
         return this->head.prev->value;
     }
@@ -75,10 +83,9 @@ public:
         std::cout << std::endl;
     }
 
-    T& Add(T new_value){
+    void push_back(const T& value){
+        new Node<T>(head.prev, value, &head);
         ++this->size;
-        Node<T>* node = new Node<T>(head.prev, new_value, &head);
-        return node->value;
     }
 
     void Clear(){
@@ -126,10 +133,7 @@ public:
     }
 
     void RemoveAt(size_t index){
-        if(index >= size) throw std::out_of_range("LinkedList: Index out of range");
-        Node<T>* cur = this->head.next;
-        for(size_t i = 0; i < index; ++i) cur = cur->next;
-        cur->Delete();
+        smart_index(index)->Delete();
         --this->size;
     }
 };
@@ -174,7 +178,8 @@ int main(void){
 
     for(int i = 0; i < 11; ++i) linkl.Add(i);
 
-    linkl[4] = 69;
+    linkl[3] = 69;
+    linkl[8] = 420;
 
     linkl.DebugPrint();
 
