@@ -15,13 +15,12 @@ struct Node{
 
     Node(Node<T>* prev, const T& value) : Node(prev, value, prev->next) {}
 
-    void Delink(){
+    void Delete(){
         if(prev && next && prev != this && next != this){
             this->prev->next = this->next;
             this->next->prev = this->prev;
         }
-        this->prev = nullptr;
-        this->next = nullptr;
+        delete this;
     }
 };
 
@@ -32,6 +31,9 @@ private:
 
 public:
     LinkedList() = default;
+
+    LinkedList(const LinkedList&) = delete;
+    LinkedList& operator=(const LinkedList&) = delete;
 
     ~LinkedList(){
         this->Clear();
@@ -45,7 +47,7 @@ public:
         Node<T>* cur = head.next;
         while(cur != head){
             Node<T> *next = cur->next;
-            delete cur;
+            cur->Delete();
             cur = next;
         }
         head.next = &head;
