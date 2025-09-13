@@ -40,6 +40,10 @@ public:
         this->Clear();
     }
 
+    struct Iterator;
+    Iterator begin() { return Iterator(this->head.next); }
+    Iterator end() { return Iterator(&this->head); }
+
     T& operator[](size_t index){
         if(index >= this->size) throw std::out_of_range("LinkedList: Index out of range");
         Node<T>* cur = this->head.next;
@@ -65,10 +69,8 @@ public:
     }
 
     void DebugPrint(){
-        Node<T>* cur = this->head.next;
-        while(cur != &this->head){
-            std::cout << cur->value << '\n';
-            cur = cur->next;
+        for(auto it = this->begin(); it != this->end(); ++it){
+            std::cout << *it << '\n';
         }
         std::cout << std::endl;
     }
@@ -91,11 +93,11 @@ public:
         this->size = 0;
     }
 
-    size_t Size(){
+    size_t Size() const{
         return this->size;
     }
 
-    bool Empty(){
+    bool Empty() const{
         return (this->size == 0);
     }
 
@@ -130,6 +132,41 @@ public:
         cur->Delete();
         --this->size;
     }
+};
+
+template<typename T>
+struct LinkedList<T>::Iterator{
+    Node<T>* node;
+
+    Iterator(Node<T>* n) : node(n) {}
+
+    T& operator*() const { return node->value; }
+
+    Iterator& operator++(){
+        node = node->next;
+        return *this;
+    }
+
+    Iterator operator++(int){
+        Iterator tmp = *this;
+        node = node->next;
+        return tmp;
+    }
+
+    Iterator& operator--(){
+        node = node->prev;
+        return *this;
+    }
+
+    Iterator operator--(int){
+        Iterator tmp = *this;
+        node = node->prev;
+        return tmp;
+    }
+
+    bool operator==(const Iterator& other) const { return node == other.node; }
+    
+    bool operator!=(const Iterator& other) const { return node != other.node; }
 };
 
 int main(void){
