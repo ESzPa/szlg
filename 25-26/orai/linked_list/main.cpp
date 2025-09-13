@@ -40,14 +40,14 @@ public:
         this->Clear();
     }
 
-    T& operator[](const size_t& index){
+    T& operator[](size_t index){
         if(index >= this->size) throw std::out_of_range("LinkedList: Index out of range");
         Node<T>* cur = this->head.next;
         for(size_t i = 0; i < index; ++i) cur = cur->next;
         return cur->value;
     }
 
-    const T& operator[](const size_t& index) const{
+    const T& operator[](size_t index) const{
         if(index >= this->size) throw std::out_of_range("LinkedList: Index out of range");
         const Node<T>* cur = this->head.next;
         for(size_t i = 0; i < index; ++i) cur = cur->next;
@@ -95,6 +95,10 @@ public:
         return this->size;
     }
 
+    bool Empty(){
+        return (this->size == 0);
+    }
+
     void Remove(const T& value){
         Node<T>* cur = this->head.next;
         while(cur != &this->head){
@@ -119,7 +123,7 @@ public:
         }
     }
 
-    void RemoveAt(const size_t& index){
+    void RemoveAt(size_t index){
         if(index >= size) throw std::out_of_range("LinkedList: Index out of range");
         Node<T>* cur = this->head.next;
         for(size_t i = 0; i < index; ++i) cur = cur->next;
