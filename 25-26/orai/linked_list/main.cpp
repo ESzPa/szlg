@@ -176,7 +176,7 @@ struct LinkedList<T>::Iterator{
 int main(void){
     LinkedList<int> linkl;
 
-    for(int i = 0; i < 11; ++i) linkl.Add(i);
+    for(int i = 0; i < 11; ++i) linkl.push_back(i);
 
     linkl[3] = 69;
     linkl[8] = 420;
