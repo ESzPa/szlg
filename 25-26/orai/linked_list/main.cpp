@@ -28,6 +28,7 @@ template<typename T>
 class LinkedList{
 private:
     Node<T> head;
+    size_t size = 0;
 
 public:
     LinkedList() = default;
@@ -48,8 +49,9 @@ public:
         std::cout << std::endl;
     }
 
-    void Add(T new_value){
-        new Node<T>(head.prev, new_value, &head);
+    Node<T>* Add(T new_value){
+        ++this->size;
+        return new Node<T>(head.prev, new_value, &head);
     }
 
     void Clear(){
@@ -61,6 +63,11 @@ public:
         }
         head.next = &head;
         head.prev = &head;
+        this->size = 0;
+    }
+
+    size_t Size(){
+        return this->size;
     }
 
     void Remove(const T& value){
@@ -68,6 +75,7 @@ public:
         while(cur != &this->head){
             if(cur->value == value){
                 cur->Delete();
+                --this->size;
                 break;
             }
             cur = cur->next;
@@ -80,9 +88,22 @@ public:
             Node<T>* next = cur->next;
             if(cur->value == value){
                 cur->Delete();
+                --this->size;
             }
             cur = next;
         }
+    }
+
+    void RemoveAt(const size_t& index){
+        if(index >= size){
+            throw std::out_of_range("LinkedList: Index out of range");
+            return;
+        }
+
+        Node<T>* cur = this->head.next;
+        for(size_t i = 0; i < index; ++i) cur = cur->next;
+        cur->Delete();
+        --this->size;
     }
 };
 
