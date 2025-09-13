@@ -28,18 +28,18 @@ template<typename T>
 class LinkedList{
 private:
     Node<T> head;
-    size_t size = 0;
+    size_t list_size = 0;
 
     Node<T>* smart_index(size_t index){
-        if(index >= this->size) throw std::out_of_range("LinkedList: Index out of range");
-        if(index < this->size/2){
+        if(index >= this->list_size) throw std::out_of_range("LinkedList: Index out of range");
+        if(index < this->list_size/2){
             Node<T>* cur = this->head.next;
             for(size_t i = 0; i < index; ++i) cur = cur->next;
             return cur;
         }
         else{
             Node<T>* cur = this->head.prev;
-            for(size_t i = 0; i < this->size-index-1; ++i) cur = cur->prev;
+            for(size_t i = 0; i < this->list_size-index-1; ++i) cur = cur->prev;
             return cur;
         }
     }
@@ -51,7 +51,7 @@ public:
     LinkedList& operator=(const LinkedList&) = delete;
 
     ~LinkedList(){
-        this->Clear();
+        this->clear();
     }
 
     struct Iterator;
@@ -66,12 +66,22 @@ public:
         return smart_index(index)->value;
     }
     
-    T& Front(){
+    T& front(){
         if(this->head.next == &this->head) throw std::out_of_range("LinkedList: List is empty");
         return this->head.next->value;
     }
 
-    T& Back(){
+    const T& front() const{
+        if(this->head.next == &this->head) throw std::out_of_range("LinkedList: List is empty");
+        return this->head.next->value;
+    }
+
+    T& back(){
+        if(this->head.prev == &this->head) throw std::out_of_range("LinkedList: List is empty");
+        return this->head.prev->value;
+    }
+
+    const T& back() const{
         if(this->head.prev == &this->head) throw std::out_of_range("LinkedList: List is empty");
         return this->head.prev->value;
     }
@@ -85,10 +95,18 @@ public:
 
     void push_back(const T& value){
         new Node<T>(head.prev, value, &head);
-        ++this->size;
+        ++this->list_size;
     }
 
-    void Clear(){
+    void insert_at(size_t index, const T& value){
+        Node<T>* indexed = smart_index(index);
+        Node<T>* node = new Node<T>(indexed, value, indexed->next);
+        indexed->next->prev = node;
+        indexed->next = node;
+        ++this->list_size;
+    }
+
+    void clear(){
         Node<T>* cur = head.next;
         while(cur != &this->head){
             Node<T> *next = cur->next;
@@ -97,44 +115,44 @@ public:
         }
         head.next = &head;
         head.prev = &head;
-        this->size = 0;
+        this->list_size = 0;
     }
 
-    size_t Size() const{
-        return this->size;
+    size_t size() const{
+        return this->list_size;
     }
 
-    bool Empty() const{
-        return (this->size == 0);
+    bool empty() const{
+        return (this->list_size == 0);
     }
 
-    void Remove(const T& value){
+    void remove(const T& value){
         Node<T>* cur = this->head.next;
         while(cur != &this->head){
             if(cur->value == value){
                 cur->Delete();
-                --this->size;
+                --this->list_size;
                 break;
             }
             cur = cur->next;
         }
     }
 
-    void RemoveAll(const T& value){
+    void remove_all(const T& value){
         Node<T>* cur = this->head.next;
         while(cur != &this->head){
             Node<T>* next = cur->next;
             if(cur->value == value){
                 cur->Delete();
-                --this->size;
+                --this->list_size;
             }
             cur = next;
         }
     }
 
-    void RemoveAt(size_t index){
+    void remove_at(size_t index){
         smart_index(index)->Delete();
-        --this->size;
+        --this->list_size;
     }
 };
 
@@ -176,10 +194,12 @@ struct LinkedList<T>::Iterator{
 int main(void){
     LinkedList<int> linkl;
 
-    for(int i = 0; i < 11; ++i) linkl.push_back(i);
+    for(int i = 0; i < 12; ++i) linkl.push_back(i);
 
     linkl[3] = 69;
     linkl[8] = 420;
+
+    linkl.remove_at(linkl.size()-1);
 
     linkl.DebugPrint();
 
