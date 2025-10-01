@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "postfix.h"
 
 void postfix_calculator(){
