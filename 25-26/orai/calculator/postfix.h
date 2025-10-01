@@ -1,10 +1,10 @@
-#include <iostream>
 #include <string>
 #include <cstdint>
 #include <stack>
 #include <cmath>
 #include <functional>
 #include <unordered_map>
+#include <iostream>
 
 uint64_t calc_factorial(uint64_t a){
     if(a < 2) return 1;
@@ -70,19 +70,4 @@ uint64_t postfix_calculate(std::string postfix_string){
     return operands.top(); 
 }
 
-void postfix_calculator(){
-    std::string input;
-    while(true){
-        std::cout << "> ";
-        std::cin >> input;
-        if(input == "exit") break;
 
-        uint64_t result = postfix_calculate(input);
-        std::cout << result << '\n';
-    }
-}
-
-int main(void){
-    postfix_calculator();
-    return 0;
-}
