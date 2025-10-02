@@ -1,12 +1,6 @@
 #pragma once
 
-#include <string>
-#include <cstdint>
-#include <stack>
-#include <cmath>
-#include <functional>
-#include <unordered_map>
-#include <iostream>
+#include "constants.h"
 
 uint64_t calc_factorial(uint64_t a){
     if(a < 2) return 1;
@@ -28,10 +22,6 @@ uint64_t calc_power(uint64_t a, uint64_t b){
     }
     return result;
 }
-
-constexpr std::string_view binary_ops_list = "+-*^%";
-constexpr std::string_view unary_ops_list = "!";
-constexpr std::string_view operands_list = "1234567890";
 
 std::unordered_map<char, std::function<uint64_t(uint64_t, uint64_t)>> binary_ops_map = {
     {'+', [](uint64_t a, uint64_t b){ return a + b; }},
