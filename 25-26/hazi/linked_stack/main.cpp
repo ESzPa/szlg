@@ -25,8 +25,14 @@ public:
     LinkedStack() : head(nullptr), ssize(0) {}
     ~LinkedStack() = default;
 
+    LinkedStack(const LinkedStack&) = delete;
+    LinkedStack& operator=(const LinkedStack&) = delete;
+
+    LinkedStack(LinkedStack&& other) noexcept = default;
+    LinkedStack& operator=(LinkedStack&& other) noexcept = default; 
+
     void push(const T& value) {
-        this->head = std::make_unique<Node<T>>(value, this->head);
+        this->head = std::make_unique<Node<T>>(value, std::move(this->head));
         ++this->ssize;
     }
 
@@ -57,8 +63,8 @@ public:
 
     // 1.
     template<typename Predicate>
-    LinkedStack Where(Predicate pred) const {
-        LinkedStack st;
+    LinkedStack<T> Where(Predicate pred) const {
+        LinkedStack<T> st;
         Node<T>* cur = this->head.get();
         while(cur) {
             if(pred(cur->value)){
@@ -71,8 +77,8 @@ public:
 
     // 2.
     template<typename Selector>
-    LinkedStack Select(Selector select) const {
-        LinkedStack st;
+    LinkedStack<T> Select(Selector select) const {
+        LinkedStack<T> st;
         Node<T>* cur = this->head.get();
         while(cur) {
             st.push(select(cur->value));
@@ -82,8 +88,8 @@ public:
     }
 
     // 3.
-    LinkedStack Reverse() const {
-        LinkedStack st;
+    LinkedStack<T> Reverse() const {
+        LinkedStack<T> st;
         Node<T>* cur = this->head.get();
         while(cur) {
             st.push(cur->value);
@@ -144,7 +150,22 @@ public:
 };
 
 int main(void) {
-    while(1) std::cout << "Testswhere?\n";
+    // 'LinkedStack::Where' test
+    {
+        LinkedStack<int> test;
+        for(int i = 0; i < 32; ++i){
+            test.push(i);
+        }
+        LinkedStack<int> result = test.Where([](int e){
+            return e % 2;
+        }); 
+        std::cout << "Where[0;32], ? e % 2:\n\t";
+        while(!result.empty()){
+            std::cout << result.top() << "; ";
+            result.pop();
+        }
+        std::cout << "\n-----------------------------------------------\n";
+    }
 
     return 0;
 }
