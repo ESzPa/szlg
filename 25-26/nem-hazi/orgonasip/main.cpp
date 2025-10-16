@@ -10,12 +10,18 @@
 #include <iostream>
 
 void orgonasip_rendez(std::vector<int>& list) {
+    // Szepen sorrendbe tesszuk
     std::sort(list.begin(), list.end());
+    // Csinalunk egy ideiglenes listat ahova rendezunk
     std::vector<int> temp(list.size());
+    // Vegigmegyunk az elemeken
     for(int i = 0; i < list.size(); ++i){
+        // Helyukre tesszuk az elemeket
         temp[i%2 ? i/2 : list.size()-1-i/2] = list[i];
     }
-    list = temp;
+    // Betesszuk az ideiglenes listat az eredeti helyere
+    // Copy(O(n)) helyett, moveoljuk (O(1))
+    list = std::move(temp);
 }
 
 int main(void) {
@@ -28,7 +34,7 @@ int main(void) {
         list.push_back(dist(gen));
     }
 
-    auto printvec = [](std::vector<int>& v){
+    auto printvec = [](const std::vector<int>& v){
         for (int x : v) std::cout << x << " ";
         std::cout << "\n";
     };
