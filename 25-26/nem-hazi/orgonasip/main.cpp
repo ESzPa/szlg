@@ -14,10 +14,12 @@ void orgonasip_rendez(std::vector<int>& list) {
     std::sort(list.begin(), list.end());
     // Csinalunk egy ideiglenes listat ahova rendezunk
     std::vector<int> temp(list.size());
+    // Magic
+    temp[list.size()/2] = list.back();
     // Vegigmegyunk az elemeken
-    for(int i = 0; i < list.size(); ++i){
+    for(int i = 0; i < list.size()-1; ++i){
         // Helyukre tesszuk az elemeket
-        temp[i%2 ? i/2 : list.size()-1-i/2] = list[i];
+        temp[i%2 ? list.size()-1-i/2 : i/2] = list[i];
     }
     // Betesszuk az ideiglenes listat az eredeti helyere
     // Copy(O(n)) helyett, moveoljuk (O(1))
