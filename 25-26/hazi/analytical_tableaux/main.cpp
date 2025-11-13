@@ -7,11 +7,13 @@
 #include "expr_tree.h"
 #include "node.h"
 
-int main(void) {
+int main(int argc, char **argv) {
+    // Example hardcoded usage
 
-    auto expr1 = logic::parse_expression("A | B");
-
-    auto expr2 = logic::parse_expression("A & !B");
+    auto expr1 = logic::parse_expression("!(A & B) | C");
+    auto expr2 = logic::parse_expression("(A = B) & (!C | D)");
+    auto expr3 = logic::parse_expression("!(A | B) = !(A & !B)");
+    auto expr4 = logic::parse_expression("(A & B) > (C | !D)");
 
     logic::formula_list formulas = {expr1, expr2};
 

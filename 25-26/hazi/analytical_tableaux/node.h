@@ -434,7 +434,7 @@ static std::shared_ptr<Node> ExpressionToNNF(std::shared_ptr<Node> node) {
             auto not_a = std::make_shared<Node>(Operator::NOT);
             not_a->children.push_back(node->children[0]);
             auto or_node = std::make_shared<Node>(Operator::OR);
-            or_node->children.push_back(ExpressionToNNF(not_a));
+            or_node->children.push_back(not_a);
             or_node->children.push_back(ExpressionToNNF(node->children[1]));
             return or_node;
         }
