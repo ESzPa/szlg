@@ -8,9 +8,11 @@
 
 namespace logic {
 
+using formula_list = std::vector<std::shared_ptr<Node>>;
+
 class AnalyticalTableaux {
   private:
-    std::vector<std::shared_ptr<Node>> formulas_;
+    formula_list formulas_;
     std::unordered_set<Literal> positive_literals_;
     std::unordered_set<Literal> negative_literals_;
 
@@ -25,7 +27,7 @@ class AnalyticalTableaux {
         }
 
         auto current = rem_formulas[0];
-        std::vector<std::shared_ptr<Node>> rest(rem_formulas.begin() + 1, rem_formulas.end());
+        formula_list rest(rem_formulas.begin() + 1, rem_formulas.end());
 
         if(current->is_literal()) {
             positive_literals_.insert(current->get_literal());
@@ -45,16 +47,16 @@ class AnalyticalTableaux {
 
             switch(op) {
                 case Operator::AND: {
-                    std::vector<std::shared_ptr<Node>> new_rest = rest;
+                    formula_list new_rest = rest;
                     new_rest.push_back(current->children[0]);
                     new_rest.push_back(current->children[1]);
                     return backtrack_tableaux(new_rest);
                 }
                 case Operator::OR: {
-                    std::vector<std::shared_ptr<Node>> left_branch = rest;
+                    formula_list left_branch = rest;
                     left_branch.push_back(current->children[0]);
 
-                    std::vector<std::shared_ptr<Node>> right_branch = rest;
+                    formula_list right_branch = rest;
                     right_branch.push_back(current->children[1]);
 
                     return backtrack_tableaux(left_branch) || backtrack_tableaux(right_branch);
@@ -67,11 +69,11 @@ class AnalyticalTableaux {
     }
 
   public:
-    AnalyticalTableaux(const std::vector<std::shared_ptr<Node>> &formulas) : formulas_(formulas) {
+    AnalyticalTableaux(const formula_list &formulas) : formulas_(formulas) {
     }
 
     bool is_satisfiable() {
-        std::vector<std::shared_ptr<Node>> nnf_formulas;
+        formula_list nnf_formulas;
         for(auto &formula : formulas_) {
             nnf_formulas.push_back(ExpressionToNNF(formula));
         }
@@ -79,50 +81,12 @@ class AnalyticalTableaux {
     }
 };
 
-static std::shared_ptr<Node> create_literal(Literal lit) {
-    return std::make_shared<Node>(lit);
-}
-
-static std::shared_ptr<Node> create_not(std::shared_ptr<Node> child) {
-    auto node = std::make_shared<Node>(Operator::NOT);
-    node->children.push_back(child);
-    return node;
-}
-
-static std::shared_ptr<Node> create_and(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {
-    auto node = std::make_shared<Node>(Operator::AND);
-    node->children.push_back(left);
-    node->children.push_back(right);
-    return node;
-}
-
-static std::shared_ptr<Node> create_or(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {
-    auto node = std::make_shared<Node>(Operator::OR);
-    node->children.push_back(left);
-    node->children.push_back(right);
-    return node;
-}
-
-static std::shared_ptr<Node> create_imply(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {
-    auto node = std::make_shared<Node>(Operator::IMPLY);
-    node->children.push_back(left);
-    node->children.push_back(right);
-    return node;
-}
-
-static std::shared_ptr<Node> create_iff(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {
-    auto node = std::make_shared<Node>(Operator::IFF);
-    node->children.push_back(left);
-    node->children.push_back(right);
-    return node;
-}
-
-static bool is_consistent(const std::vector<std::shared_ptr<Node>> &formulas) {
+static bool is_consistent(const formula_list &formulas) {
     AnalyticalTableaux tableaux(formulas);
     return tableaux.is_satisfiable();
 }
 
-static bool is_contradiction(const std::vector<std::shared_ptr<Node>> &formulas) {
+static bool is_contradiction(const formula_list &formulas) {
     return !is_consistent(formulas);
 }
 
