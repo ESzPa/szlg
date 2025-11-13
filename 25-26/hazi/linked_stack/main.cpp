@@ -266,7 +266,7 @@ int main(void) {
     // 'LinkedStack::Count' test
     {
         LinkedStack<int> test;
-        for(int i = 0; i < 1'000'000; ++i){
+        for(int i = 0; i < 1'000'000'000; ++i){
             test.push(i);
         }
         size_t count = test.Count(is_fermat_prime);
