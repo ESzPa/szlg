@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <ostream>
 #include <stack>
 #include <stdexcept>
 #include <string>
@@ -51,6 +52,12 @@ enum class Literal : unsigned char {
     NIL = 0,
 };
 
+struct Node;
+
+namespace {
+inline std::string node_to_string(std::shared_ptr<Node> node, int parent_precedence = 0);
+}
+
 struct Node {
     std::variant<Operator, Literal> value;
     std::vector<std::shared_ptr<Node>> children;
@@ -93,6 +100,10 @@ struct Node {
     std::shared_ptr<Node> clone() const {
         return std::make_shared<Node>(*this);
     }
+
+    std::string to_string() const {
+        return node_to_string(std::make_shared<Node>(*this));
+    }
 };
 
 namespace {
@@ -131,10 +142,10 @@ const std::unordered_map<unsigned char, Literal> char_lit_map = {
 
 const std::unordered_map<Operator, uint8_t> presedence_map = {
     // clang-format off
-    {Operator::NOT, 4},
-    {Operator::AND, 3},
-    {Operator::OR, 2},
-    {Operator::IMPLY, 1},
+    {Operator::NOT, 5},
+    {Operator::AND, 4},
+    {Operator::OR, 3},
+    {Operator::IMPLY, 2},
     {Operator::IFF, 1},
     {Operator::NIL, 0},
     // clang-format on
@@ -257,6 +268,28 @@ inline void apply_operator(unsigned char op_char, std::stack<std::shared_ptr<Nod
         default:
             throw std::runtime_error("Unknown operator");
     }
+}
+
+inline std::string node_to_string(std::shared_ptr<Node> node, int parent_precedence) {
+    if(node->is_literal()) {
+        return std::string(1, LiteralToChar(node->get_literal()));
+    }
+
+    Operator op = node->get_operator();
+    int current_precedence = presedence_map.at(op);
+
+    if(op == Operator::NOT) {
+        return "!" + node_to_string(node->children[0], current_precedence);
+    }
+
+    std::string left_str = node_to_string(node->children[0], current_precedence);
+    std::string right_str = node_to_string(node->children[1], current_precedence);
+
+    std::string op_str = std::string(" ") + static_cast<char>(op) + " ";
+    std::string result = left_str + op_str + right_str;
+
+    bool needs_parens = (current_precedence < parent_precedence);
+    return needs_parens ? "(" + result + ")" : result;
 }
 } // namespace
 
@@ -488,12 +521,13 @@ inline std::shared_ptr<Node> ExpressionToANDF_FromNNF(std::shared_ptr<Node> node
             return create_and(left, right);
         }
         case Operator::OR: {
-            auto left = ExpressionToANDF_FromNNF(node->children[0]);
-            auto right = ExpressionToANDF_FromNNF(node->children[1]);
+            auto left = node->children[0];
+            auto right = node->children[1];
 
             auto not_left = create_not(left);
             auto not_right = create_not(right);
-            auto and_node = create_and(not_left, not_right);
+            auto and_node =
+                create_and(ExpressionToANDF_FromNNF(not_left), ExpressionToANDF_FromNNF(not_right));
             return create_not(and_node);
         }
         default:
@@ -506,10 +540,43 @@ inline std::shared_ptr<Node> ExpressionToANDF(std::shared_ptr<Node> node) {
 }
 
 // OR Form
-inline std::shared_ptr<Node> ExpressionToORF(std::shared_ptr<Node> node) {
+inline std::shared_ptr<Node> ExpressionToORF_FromNNF(std::shared_ptr<Node> node) {
     if(node->is_literal())
-        return node;
-    // First NNF
+        return node->clone();
+
+    Operator op = node->get_operator();
+
+    switch(op) {
+        case Operator::NOT: {
+            auto child = ExpressionToORF_FromNNF(node->children[0]);
+
+            if(child->is_operator() && child->get_operator() == Operator::NOT) {
+                return child->children[0];
+            }
+            return create_not(child);
+        }
+        case Operator::AND: {
+            auto left = node->children[0];
+            auto right = node->children[1];
+
+            auto not_left = create_not(left);
+            auto not_right = create_not(right);
+            auto or_node =
+                create_or(ExpressionToORF_FromNNF(not_left), ExpressionToORF_FromNNF(not_right));
+            return create_not(or_node);
+        }
+        case Operator::OR: {
+            auto left = ExpressionToORF_FromNNF(node->children[0]);
+            auto right = ExpressionToORF_FromNNF(node->children[1]);
+            return create_or(left, right);
+        }
+        default:
+            return node->clone();
+    }
+}
+
+inline std::shared_ptr<Node> ExpressionToORF(std::shared_ptr<Node> node) {
+    return ExpressionToORF_FromNNF(ExpressionToNNF(node));
 }
 
 // Conditional Form
@@ -534,3 +601,11 @@ inline std::shared_ptr<Node> ExpressionToNANDF(std::shared_ptr<Node> node) {
 inline std::shared_ptr<Node> (*ExpressionToShefferForm)(std::shared_ptr<Node>) = ExpressionToNANDF;
 
 } // namespace logic
+
+inline std::ostream &operator<<(std::ostream &os, const logic::Node &node) {
+    return os << node.to_string();
+}
+
+inline std::ostream &operator<<(std::ostream &os, const std::shared_ptr<logic::Node> &node) {
+    return os << (node ? node->to_string() : "null");
+}

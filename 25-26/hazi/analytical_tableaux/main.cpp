@@ -3,6 +3,7 @@
 // C++17 compatible
 //
 #include <iostream>
+#include <ostream>
 #include <string>
 
 #include "expr_tree.h"
@@ -48,7 +49,20 @@ class Formula {
         Formula formula = logic::ExpressionToANDF(tableaux_.get_formulas()[0]);
         return formula;
     }
+
+    Formula NemVagy() const {
+        Formula formula = logic::ExpressionToORF(tableaux_.get_formulas()[0]);
+        return formula;
+    }
+
+    std::shared_ptr<logic::Node> get() const {
+        return tableaux_.get_formulas()[0];
+    }
 };
+
+inline std::ostream &operator<<(std::ostream &os, const Formula &formula) {
+    return os << formula.get()->to_string();
+}
 
 // For safer running
 template <typename Function>
@@ -109,6 +123,28 @@ int main(int argc, char **argv) {
 
         std::cout << "2. ¬A → B Kielégíthető-e, ha A és ¬B: "
                   << (formula.Kielégíthető() ? "Igen\n" : "Nem\n");
+        //
+    );
+
+    // 3.
+    spart( //
+        Formula formula("(A = B) & (!C | D)");
+
+        Formula nem_es = formula.NemÉs();
+
+        std::cout << "3. NemÉs\n(A = B) & (!C | D)\n"
+                  << nem_es << '\n';
+        //
+    );
+
+    // 4.
+    spart( //
+        Formula formula("(A = B) & (!C | D)");
+
+        Formula nem_vagy = formula.NemVagy();
+
+        std::cout << "4. NemVagy\n(A = B) & (!C | D)\n"
+                  << nem_vagy << '\n';
         //
     );
 
