@@ -46,12 +46,12 @@ TEST_CASE("Basic operator parsing", "[parser]") {
 
     SECTION("Implication operator") {
         auto expr = logic::parse_expression("A > B");
-        REQUIRE(expr->get_operator() == logic::Operator::IFF);
+        REQUIRE(expr->get_operator() == logic::Operator::IMPLY);
     }
 
     SECTION("Biconditional operator") {
         auto expr = logic::parse_expression("A = B");
-        REQUIRE(expr->get_operator() == logic::Operator::IMPLY);
+        REQUIRE(expr->get_operator() == logic::Operator::IFF);
     }
 }
 
@@ -314,7 +314,7 @@ TEST_CASE("Consistency checking - Edge cases", "[consistency]") {
         auto expr1 = logic::parse_expression("A & B & C & D & E");
         auto expr2 = logic::parse_expression("!A | !B | !C | !D | !E");
         logic::formula_list formulas = {expr1, expr2};
-        REQUIRE(logic::is_consistent(formulas) == true);
+        REQUIRE(logic::is_consistent(formulas) == false);
     }
 }
 

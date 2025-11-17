@@ -16,8 +16,8 @@ enum class Operator : unsigned char {
     NOT = '!',   // !, ~
     AND = '&',   // &
     OR = '|',    // |
-    IFF = '>',   // >
-    IMPLY = '=', // =
+    IMPLY = '>', // >
+    IFF = '=',   // =
     NIL = 0,
 };
 
@@ -110,13 +110,13 @@ const std::unordered_map<unsigned char, Operator> char_expr_map = {
     //{U'∧', Operator::AND}, 
     {'|', Operator::OR},  
     //{U'∨', Operator::OR},    
-    //{U'→', Operator::IFF},
-    //{U'⊃', Operator::IFF}, 
-    //{U'⇒', Operator::IFF}, 
-    {'>', Operator::IFF},
-    {'=', Operator::IMPLY},
-    //{U'↔', Operator::IMPLY}, 
-    //{U'⇔', Operator::IMPLY},
+    {'>', Operator::IMPLY},
+    //{U'→', Operator::IMPLY},
+    //{U'⊃', Operator::IMPLY}, 
+    //{U'⇒', Operator::IMPLY},
+    {'=', Operator::IFF},
+    //{U'↔', Operator::IFF}, 
+    //{U'⇔', Operator::IFF},
     // clang-format on
 };
 
