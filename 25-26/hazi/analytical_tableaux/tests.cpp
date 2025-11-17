@@ -390,3 +390,98 @@ TEST_CASE("Consistency checking - Performance stress tests", "[consistency]") {
         REQUIRE(logic::is_consistent(formulas) == true);
     }
 }
+
+TEST_CASE("Consistency checking - Complex logical relationships", "[consistency]") {
+    SECTION("Transitivity of implication") {
+        auto trans1 = logic::parse_expression("(A > B) & (B > C)");
+        auto trans2 = logic::parse_expression("A > C");
+        logic::formula_list formulas = {trans1, trans2};
+        REQUIRE(logic::is_consistent(formulas) == true);
+    }
+
+    SECTION("Modus Ponens validity") {
+        auto impl = logic::parse_expression("A > B");
+        auto premise = logic::parse_expression("A");
+        auto conclusion = logic::parse_expression("B");
+        logic::formula_list formulas = {impl, premise, conclusion};
+        REQUIRE(logic::is_consistent(formulas) == true);
+    }
+
+    SECTION("Modus Tollens validity") {
+        auto impl = logic::parse_expression("A > B");
+        auto neg_conclusion = logic::parse_expression("!B");
+        auto neg_premise = logic::parse_expression("!A");
+        logic::formula_list formulas = {impl, neg_conclusion, neg_premise};
+        REQUIRE(logic::is_consistent(formulas) == true);
+    }
+
+    SECTION("Disjunctive syllogism") {
+        auto disjunction = logic::parse_expression("A | B");
+        auto neg_first = logic::parse_expression("!A");
+        auto second = logic::parse_expression("B");
+        logic::formula_list formulas = {disjunction, neg_first, second};
+        REQUIRE(logic::is_consistent(formulas) == true);
+    }
+}
+
+TEST_CASE("Consistency checking - SAT solver style tests", "[consistency]") {
+    SECTION("3-SAT satisfiable case") {
+        auto clause1 = logic::parse_expression("A | B | C");
+        auto clause2 = logic::parse_expression("!A | B | !C");
+        auto clause3 = logic::parse_expression("A | !B | C");
+        logic::formula_list formulas = {clause1, clause2, clause3};
+        REQUIRE(logic::is_consistent(formulas) == true);
+    }
+
+    SECTION("3-SAT unsatisfiable case") {
+        auto clause1 = logic::parse_expression("A | B | C");
+        auto clause2 = logic::parse_expression("A | B | !C");
+        auto clause3 = logic::parse_expression("A | !B | C");
+        auto clause4 = logic::parse_expression("A | !B | !C");
+        auto clause5 = logic::parse_expression("!A | B | C");
+        auto clause6 = logic::parse_expression("!A | B | !C");
+        auto clause7 = logic::parse_expression("!A | !B | C");
+        auto clause8 = logic::parse_expression("!A | !B | !C");
+        logic::formula_list formulas = {clause1, clause2, clause3, clause4,
+                                        clause5, clause6, clause7, clause8};
+        REQUIRE(logic::is_consistent(formulas) == false);
+    }
+
+    SECTION("Horn clauses satisfiable") {
+        auto horn1 = logic::parse_expression("!A | !B | C");
+        auto horn2 = logic::parse_expression("!C | D");
+        auto horn3 = logic::parse_expression("A");
+        auto horn4 = logic::parse_expression("B");
+        logic::formula_list formulas = {horn1, horn2, horn3, horn4};
+        REQUIRE(logic::is_consistent(formulas) == true);
+    }
+}
+
+TEST_CASE("Consistency checking - Real-world reasoning", "[consistency]") {
+    SECTION("Murder mystery scenario") {
+        auto butler_or_maid = logic::parse_expression("B | M");
+        auto butler_alibi = logic::parse_expression("B > A");
+        auto maid_alibi = logic::parse_expression("M > A");
+        auto no_alibi = logic::parse_expression("!A");
+        logic::formula_list formulas = {butler_or_maid, butler_alibi, maid_alibi, no_alibi};
+        REQUIRE(logic::is_consistent(formulas) == false);
+    }
+
+    SECTION("Schedule planning") {
+        auto time_conflict1 = logic::parse_expression("!(M & T)");
+        auto time_conflict2 = logic::parse_expression("!(M & R)");
+        auto required1 = logic::parse_expression("M | T");
+        auto required2 = logic::parse_expression("R");
+        logic::formula_list formulas = {time_conflict1, time_conflict2, required1, required2};
+        REQUIRE(logic::is_consistent(formulas) == true);
+    }
+
+    SECTION("Circuit design constraints - consistent version") {
+        auto constraint1 = logic::parse_expression("(A & B) > !C");
+        auto constraint2 = logic::parse_expression("C > (D | E)");
+        auto constraint3 = logic::parse_expression("!(D & E)");
+        auto state = logic::parse_expression("A & B & !C");
+        logic::formula_list formulas = {constraint1, constraint2, constraint3, state};
+        REQUIRE(logic::is_consistent(formulas) == true);
+    }
+}

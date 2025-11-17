@@ -10,6 +10,7 @@ ReferenceAlignment: Right
 SpaceBeforeParens: Never
 SpaceBeforeAssignmentOperators: true
 IndentCaseLabels: true
+AlwaysBreakTemplateDeclarations: Yes
 
 BraceWrapping:
   AfterClass: false

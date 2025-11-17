@@ -8,15 +8,47 @@
 #include "expr_tree.h"
 #include "node.h"
 
+static size_t _spart_global_counter = 0;
+#define spart(...) test_part(++_spart_global_counter, [&]() { __VA_ARGS__ })
+
+// Wrapper class
 class Formula {
   private:
-    logic::AnalyticalTableaux tableaux_;
+    mutable logic::AnalyticalTableaux tableaux_;
+
+    void push_(const std::string &expr) {
+        tableaux_.push(logic::parse_expression(expr));
+    }
 
   public:
     Formula(const std::string &expr) {
-        tableaux_.push(logic::parse_expression(expr));
+        push_(expr);
+    }
+
+    void Hozzátold(const std::string &expr) {
+        push_(expr);
+    }
+
+    void Igazságérték(const std::string &expr) {
+        push_(expr);
+    }
+
+    bool Kielégíthető() const {
+        return tableaux_.is_satisfiable();
     }
 };
+
+// For safer running
+template <typename Function>
+void test_part(size_t count, Function func) {
+    try {
+        func();
+        std::cout << count << ". Makulátlan futás\n\n";
+
+    } catch(...) {
+        std::cout << count << ". Hibás futás\n\n";
+    }
+}
 
 int main(int argc, char **argv) {
     //
@@ -30,10 +62,10 @@ int main(int argc, char **argv) {
     logic::formula_list formulas = {expr1, expr2, expr3, expr4};
 
     if(logic::is_consistent(formulas)) {
-        std::cout << "Formulas are consistent (possible)\n";
+        // std::cout << "Formulas are consistent (possible)\n";
     }
     else {
-        std::cout << "Formulas are inconsistent (impossible)\n";
+        // std::cout << "Formulas are inconsistent (impossible)\n";
     }
 
     // Also possible with a class
@@ -50,7 +82,20 @@ int main(int argc, char **argv) {
     //
 
     // 1.
-    Formula formula("!(A & B) | C");
+    spart(Formula formula("!(A & B) | C"););
+
+    // 2.
+    spart( //
+        Formula formula("!A > B");
+
+        formula.Igazságérték("A"); formula.Igazságérték("!B");
+        // Or
+        formula.Igazságérték("A & !B");
+
+        std::cout << "2. ¬A → B Kielégíthető-e, ha A és ¬B: "
+                  << (formula.Kielégíthető() ? "Igen\n" : "Nem\n");
+        //
+    );
 
     return 0;
 }

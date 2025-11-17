@@ -81,7 +81,7 @@ class AnalyticalTableaux {
 
     bool is_satisfiable() {
         formula_list nnf_formulas;
-        for(auto &formula : formulas_) {
+        for(const auto &formula : formulas_) {
             nnf_formulas.push_back(ExpressionToNNF(formula));
         }
         return backtrack_tableaux(nnf_formulas);
