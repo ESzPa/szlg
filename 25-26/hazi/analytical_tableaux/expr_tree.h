@@ -69,7 +69,14 @@ class AnalyticalTableaux {
     }
 
   public:
+    AnalyticalTableaux() {
+    }
+
     AnalyticalTableaux(const formula_list &formulas) : formulas_(formulas) {
+    }
+
+    void push(std::shared_ptr<Node> formula) {
+        formulas_.push_back(formula);
     }
 
     bool is_satisfiable() {
