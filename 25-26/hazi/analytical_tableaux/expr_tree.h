@@ -86,14 +86,18 @@ class AnalyticalTableaux {
         }
         return backtrack_tableaux(nnf_formulas);
     }
+
+    formula_list get_formulas() const {
+        return formulas_;
+    }
 };
 
-static bool is_consistent(const formula_list &formulas) {
+inline bool is_consistent(const formula_list &formulas) {
     AnalyticalTableaux tableaux(formulas);
     return tableaux.is_satisfiable();
 }
 
-static bool is_contradiction(const formula_list &formulas) {
+inline bool is_contradiction(const formula_list &formulas) {
     return !is_consistent(formulas);
 }
 

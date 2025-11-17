@@ -20,21 +20,33 @@ class Formula {
         tableaux_.push(logic::parse_expression(expr));
     }
 
+    void push_(std::shared_ptr<logic::Node> node) {
+        tableaux_.push(node);
+    }
+
   public:
     Formula(const std::string &expr) {
         push_(expr);
     }
 
-    void Hozzátold(const std::string &expr) {
-        push_(expr);
-    }
-
-    void Igazságérték(const std::string &expr) {
-        push_(expr);
+    Formula(std::shared_ptr<logic::Node> node) {
+        push_(node);
     }
 
     bool Kielégíthető() const {
         return tableaux_.is_satisfiable();
+    }
+
+    void Igazságérték(const std::string &expr) {
+        if(tableaux_.get_formulas().size() < 1) {
+            throw std::runtime_error("Üres formulához nem adhatsz igazságértéket.");
+        }
+        push_(expr);
+    }
+
+    Formula NemÉs() const {
+        Formula formula = logic::ExpressionToANDF(tableaux_.get_formulas()[0]);
+        return formula;
     }
 };
 
@@ -82,7 +94,10 @@ int main(int argc, char **argv) {
     //
 
     // 1.
-    spart(Formula formula("!(A & B) | C"););
+    spart( //
+        Formula formula("!(A & B) | C");
+        //
+    );
 
     // 2.
     spart( //

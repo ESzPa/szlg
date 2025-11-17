@@ -140,72 +140,72 @@ const std::unordered_map<Operator, uint8_t> presedence_map = {
     // clang-format on
 };
 
-static bool has_higher_presedence(Operator op1, Operator op2) {
+inline bool has_higher_presedence(Operator op1, Operator op2) {
     return presedence_map.at(op1) > presedence_map.at(op2);
 }
 } // namespace
 
-static Operator CharToOperator(unsigned char chr) {
+inline Operator CharToOperator(unsigned char chr) {
     if(!char_expr_map.count(chr))
         return Operator::NIL;
     return char_expr_map.at(chr);
 }
 
-static unsigned char OperatorToChar(Operator exprt) {
+inline unsigned char OperatorToChar(Operator exprt) {
     return static_cast<unsigned char>(exprt);
 }
 
-static Literal CharToLiteral(unsigned char chr) {
+inline Literal CharToLiteral(unsigned char chr) {
     if(!char_lit_map.count(chr))
         return Literal::NIL;
     return char_lit_map.at(chr);
 }
 
-static unsigned char LiteralToChar(Literal lit) {
+inline unsigned char LiteralToChar(Literal lit) {
     return static_cast<unsigned char>(lit);
 }
 
-static bool is_negated_literal(std::shared_ptr<Node> node) {
+inline bool is_negated_literal(std::shared_ptr<Node> node) {
     return node->is_operator() && node->get_operator() == Operator::NOT &&
            node->children[0]->is_literal();
 }
 
-static Literal GetLiteralFromNegated(std::shared_ptr<Node> node) {
+inline Literal GetLiteralFromNegated(std::shared_ptr<Node> node) {
     return node->children[0]->get_literal();
 }
 
-static std::shared_ptr<Node> create_literal(Literal lit) {
+inline std::shared_ptr<Node> create_literal(Literal lit) {
     return std::make_shared<Node>(lit);
 }
 
-static std::shared_ptr<Node> create_not(std::shared_ptr<Node> child) {
+inline std::shared_ptr<Node> create_not(std::shared_ptr<Node> child) {
     auto node = std::make_shared<Node>(Operator::NOT);
     node->children.push_back(child);
     return node;
 }
 
-static std::shared_ptr<Node> create_and(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {
+inline std::shared_ptr<Node> create_and(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {
     auto node = std::make_shared<Node>(Operator::AND);
     node->children.push_back(left);
     node->children.push_back(right);
     return node;
 }
 
-static std::shared_ptr<Node> create_or(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {
+inline std::shared_ptr<Node> create_or(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {
     auto node = std::make_shared<Node>(Operator::OR);
     node->children.push_back(left);
     node->children.push_back(right);
     return node;
 }
 
-static std::shared_ptr<Node> create_imply(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {
+inline std::shared_ptr<Node> create_imply(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {
     auto node = std::make_shared<Node>(Operator::IMPLY);
     node->children.push_back(left);
     node->children.push_back(right);
     return node;
 }
 
-static std::shared_ptr<Node> create_iff(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {
+inline std::shared_ptr<Node> create_iff(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {
     auto node = std::make_shared<Node>(Operator::IFF);
     node->children.push_back(left);
     node->children.push_back(right);
@@ -213,7 +213,7 @@ static std::shared_ptr<Node> create_iff(std::shared_ptr<Node> left, std::shared_
 }
 
 namespace {
-static void apply_operator(unsigned char op_char, std::stack<std::shared_ptr<Node>> &output_stack) {
+inline void apply_operator(unsigned char op_char, std::stack<std::shared_ptr<Node>> &output_stack) {
     Operator op = CharToOperator(op_char);
 
     switch(op) {
@@ -260,7 +260,7 @@ static void apply_operator(unsigned char op_char, std::stack<std::shared_ptr<Nod
 }
 } // namespace
 
-static std::shared_ptr<Node> parse_expression(const std::string &expr) {
+inline std::shared_ptr<Node> parse_expression(const std::string &expr) {
     std::stack<std::shared_ptr<Node>> output_stack;
     std::stack<unsigned char> operator_stack;
 
@@ -346,9 +346,9 @@ static std::shared_ptr<Node> parse_expression(const std::string &expr) {
 }
 
 // Negation Normal Form
-static std::shared_ptr<Node> ExpressionToNNF(std::shared_ptr<Node> node) {
+inline std::shared_ptr<Node> ExpressionToNNF(std::shared_ptr<Node> node) {
     if(node->is_literal())
-        return node;
+        return node->clone();
 
     Operator op = node->get_operator();
 
@@ -463,5 +463,74 @@ static std::shared_ptr<Node> ExpressionToNNF(std::shared_ptr<Node> node) {
             return node;
     }
 }
+
+// Here could be added CNF and DNF
+
+// AND Form
+inline std::shared_ptr<Node> ExpressionToANDF_FromNNF(std::shared_ptr<Node> node) {
+    if(node->is_literal())
+        return node->clone();
+
+    Operator op = node->get_operator();
+
+    switch(op) {
+        case Operator::NOT: {
+            auto child = ExpressionToANDF_FromNNF(node->children[0]);
+
+            if(child->is_operator() && child->get_operator() == Operator::NOT) {
+                return child->children[0];
+            }
+            return create_not(child);
+        }
+        case Operator::AND: {
+            auto left = ExpressionToANDF_FromNNF(node->children[0]);
+            auto right = ExpressionToANDF_FromNNF(node->children[1]);
+            return create_and(left, right);
+        }
+        case Operator::OR: {
+            auto left = ExpressionToANDF_FromNNF(node->children[0]);
+            auto right = ExpressionToANDF_FromNNF(node->children[1]);
+
+            auto not_left = create_not(left);
+            auto not_right = create_not(right);
+            auto and_node = create_and(not_left, not_right);
+            return create_not(and_node);
+        }
+        default:
+            return node->clone();
+    }
+}
+
+inline std::shared_ptr<Node> ExpressionToANDF(std::shared_ptr<Node> node) {
+    return ExpressionToANDF_FromNNF(ExpressionToNNF(node));
+}
+
+// OR Form
+inline std::shared_ptr<Node> ExpressionToORF(std::shared_ptr<Node> node) {
+    if(node->is_literal())
+        return node;
+    // First NNF
+}
+
+// Conditional Form
+inline std::shared_ptr<Node> ExpressionToCONDF(std::shared_ptr<Node> node) {
+    if(node->is_literal())
+        return node;
+    // First NNF
+}
+
+// NOR / Peirce Form
+inline std::shared_ptr<Node> ExpressionToNORF(std::shared_ptr<Node> node) {
+    if(node->is_literal())
+        return node;
+}
+inline std::shared_ptr<Node> (*ExpressionToPierceForm)(std::shared_ptr<Node>) = ExpressionToNORF;
+
+// NAND / Sheffer Form
+inline std::shared_ptr<Node> ExpressionToNANDF(std::shared_ptr<Node> node) {
+    if(node->is_literal())
+        return node;
+}
+inline std::shared_ptr<Node> (*ExpressionToShefferForm)(std::shared_ptr<Node>) = ExpressionToNANDF;
 
 } // namespace logic
