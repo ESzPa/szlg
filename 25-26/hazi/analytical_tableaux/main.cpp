@@ -65,7 +65,7 @@ class Formula {
     }
 
     Formula SemSem() const {
-        Formula formula = logic::ExpressionToPierceForm(tableaux_.get_formulas()[0]);
+        Formula formula = logic::ExpressionToPeirceForm(tableaux_.get_formulas()[0]);
         return formula;
     }
 
@@ -88,10 +88,10 @@ template <typename Function>
 void test_part(size_t count, Function func) {
     try {
         func();
-        std::cout << count << ". Makulátlan futás\n\n";
+        std::cout << count << ". \033[32mMakulátlan futás\033[0m\n\n";
 
     } catch(...) {
-        std::cout << count << ". Hibás futás\n\n";
+        std::cout << count << ". \033[31mHibás futás\033[0m\n\n";
     }
 }
 

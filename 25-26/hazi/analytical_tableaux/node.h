@@ -606,7 +606,7 @@ inline std::shared_ptr<Node> ExpressionToCONDF(std::shared_ptr<Node> node) {
 // NOR / Peirce Form
 inline std::shared_ptr<Node> ExpressionToNORF(std::shared_ptr<Node> node) {
     if(node->is_literal())
-        return node;
+        return node->clone();
 
     Operator op = node->get_operator();
 
@@ -658,12 +658,61 @@ inline std::shared_ptr<Node> ExpressionToNORF(std::shared_ptr<Node> node) {
     }
 }
 
-inline std::shared_ptr<Node> (*ExpressionToPierceForm)(std::shared_ptr<Node>) = ExpressionToNORF;
+inline std::shared_ptr<Node> (*ExpressionToPeirceForm)(std::shared_ptr<Node>) = ExpressionToNORF;
 
 // NAND / Sheffer Form
 inline std::shared_ptr<Node> ExpressionToNANDF(std::shared_ptr<Node> node) {
     if(node->is_literal())
-        return node;
+        return node->clone();
+
+    Operator op = node->get_operator();
+
+    switch(op) {
+        case Operator::NOT: {
+            auto child = ExpressionToNANDF(node->children[0]);
+            return create_nand(child, child);
+        }
+        case Operator::AND: {
+            auto left = ExpressionToNANDF(node->children[0]);
+            auto right = ExpressionToNANDF(node->children[1]);
+
+            auto left_nand = create_nand(left, right);
+            auto right_nand = create_nand(left, right);
+
+            return create_nand(left_nand, right_nand);
+        }
+        case Operator::OR: {
+            auto left = ExpressionToNANDF(node->children[0]);
+            auto right = ExpressionToNANDF(node->children[1]);
+
+            auto left_nand = create_nand(left, left);
+            auto right_nand = create_nand(right, right);
+
+            return create_nand(left_nand, right_nand);
+        }
+        case Operator::IMPLY: {
+            auto left = ExpressionToNANDF(node->children[0]);
+            auto right = ExpressionToNANDF(node->children[1]);
+
+            auto right_nand = create_nand(right, right);
+
+            return create_nand(left, right_nand);
+        }
+        case Operator::IFF: {
+            auto left = ExpressionToNANDF(node->children[0]);
+            auto right = ExpressionToNANDF(node->children[1]);
+
+            auto not_left = create_nand(left, left);
+            auto not_right = create_nand(right, right);
+
+            auto left_implies_right = create_nand(left, not_right);
+            auto right_implies_left = create_nand(right, not_left);
+
+            return create_nand(left_implies_right, right_implies_left);
+        }
+        default:
+            return node->clone();
+    }
 }
 
 inline std::shared_ptr<Node> (*ExpressionToShefferForm)(std::shared_ptr<Node>) = ExpressionToNANDF;
