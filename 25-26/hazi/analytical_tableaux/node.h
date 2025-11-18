@@ -223,6 +223,16 @@ inline std::shared_ptr<Node> create_iff(std::shared_ptr<Node> left, std::shared_
     return node;
 }
 
+inline std::shared_ptr<Node> create_nand(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {
+    auto node = create_and(left, right);
+    return create_not(node);
+}
+
+inline std::shared_ptr<Node> create_nor(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {
+    auto node = create_or(left, right);
+    return create_not(node);
+}
+
 namespace {
 inline void apply_operator(unsigned char op_char, std::stack<std::shared_ptr<Node>> &output_stack) {
     Operator op = CharToOperator(op_char);
@@ -398,53 +408,36 @@ inline std::shared_ptr<Node> ExpressionToNNF(std::shared_ptr<Node> node) {
                     }
                     // ¬(A ∧ B) => (¬A ∨ ¬B)
                     case Operator::AND: {
-                        auto not_a = std::make_shared<Node>(Operator::NOT);
-                        not_a->children.push_back(child->children[0]);
-                        auto not_b = std::make_shared<Node>(Operator::NOT);
-                        not_b->children.push_back(child->children[1]);
-                        auto or_node = std::make_shared<Node>(Operator::OR);
-                        or_node->children.push_back(ExpressionToNNF(not_a));
-                        or_node->children.push_back(ExpressionToNNF(not_b));
+                        auto not_a = create_not(child->children[0]);
+                        auto not_b = create_not(child->children[1]);
+                        auto or_node = create_or(ExpressionToNNF(not_a), ExpressionToNNF(not_b));
                         return or_node;
                     }
                     // ¬(A v B) => (¬A ∧ ¬B)
                     case Operator::OR: {
-                        auto not_a = std::make_shared<Node>(Operator::NOT);
-                        not_a->children.push_back(child->children[0]);
-                        auto not_b = std::make_shared<Node>(Operator::NOT);
-                        not_b->children.push_back(child->children[1]);
-                        auto and_node = std::make_shared<Node>(Operator::AND);
-                        and_node->children.push_back(ExpressionToNNF(not_a));
-                        and_node->children.push_back(ExpressionToNNF(not_b));
+                        auto not_a = create_not(child->children[0]);
+                        auto not_b = create_not(child->children[1]);
+                        auto and_node = create_and(ExpressionToNNF(not_a), ExpressionToNNF(not_b));
                         return and_node;
                     }
                     // ¬(A → B) => (A ∧ ¬B)
                     case Operator::IMPLY: {
-                        auto not_b = std::make_shared<Node>(Operator::NOT);
-                        not_b->children.push_back(child->children[1]);
-                        auto and_node = std::make_shared<Node>(Operator::AND);
-                        and_node->children.push_back(ExpressionToNNF(child->children[0]));
-                        and_node->children.push_back(ExpressionToNNF(not_b));
+                        auto not_b = create_not(child->children[1]);
+                        auto and_node =
+                            create_and(ExpressionToNNF(child->children[0]), ExpressionToNNF(not_b));
                         return and_node;
                     }
                     // ¬(A ↔ B) => (A ∧ ¬B) ∨ (¬A ∧ B)
                     case Operator::IFF: {
-                        auto not_a = std::make_shared<Node>(Operator::NOT);
-                        not_a->children.push_back(child->children[0]);
-                        auto not_b = std::make_shared<Node>(Operator::NOT);
-                        not_b->children.push_back(child->children[1]);
+                        auto not_a = create_not(child->children[0]);
+                        auto not_b = create_not(child->children[1]);
 
-                        auto left_and = std::make_shared<Node>(Operator::AND);
-                        left_and->children.push_back(ExpressionToNNF(child->children[0]));
-                        left_and->children.push_back(ExpressionToNNF(not_b));
+                        auto left_and =
+                            create_and(ExpressionToNNF(child->children[0]), ExpressionToNNF(not_b));
+                        auto right_and =
+                            create_and(ExpressionToNNF(not_a), ExpressionToNNF(child->children[1]));
 
-                        auto right_and = std::make_shared<Node>(Operator::AND);
-                        right_and->children.push_back(ExpressionToNNF(not_a));
-                        right_and->children.push_back(ExpressionToNNF(child->children[1]));
-
-                        auto or_node = std::make_shared<Node>(Operator::OR);
-                        or_node->children.push_back(left_and);
-                        or_node->children.push_back(right_and);
+                        auto or_node = create_or(left_and, right_and);
                         return or_node;
                     }
                     default:
@@ -465,31 +458,20 @@ inline std::shared_ptr<Node> ExpressionToNNF(std::shared_ptr<Node> node) {
         }
         // A → B => ¬A ∨ B
         case Operator::IMPLY: {
-            auto not_a = std::make_shared<Node>(Operator::NOT);
-            not_a->children.push_back(node->children[0]);
-            auto or_node = std::make_shared<Node>(Operator::OR);
-            or_node->children.push_back(ExpressionToNNF(not_a));
-            or_node->children.push_back(ExpressionToNNF(node->children[1]));
+            auto not_a = create_not(node->children[0]);
+            auto or_node = create_or(ExpressionToNNF(not_a), ExpressionToNNF(node->children[1]));
             return or_node;
         }
         // A ↔ B => (A ∧ B) ∨ (¬A ∧ ¬B)
         case Operator::IFF: {
-            auto not_a = std::make_shared<Node>(Operator::NOT);
-            not_a->children.push_back(node->children[0]);
-            auto not_b = std::make_shared<Node>(Operator::NOT);
-            not_b->children.push_back(node->children[1]);
+            auto not_a = create_not(node->children[0]);
+            auto not_b = create_not(node->children[1]);
 
-            auto left_and = std::make_shared<Node>(Operator::AND);
-            left_and->children.push_back(ExpressionToNNF(node->children[0]));
-            left_and->children.push_back(ExpressionToNNF(node->children[1]));
+            auto left_and =
+                create_and(ExpressionToNNF(node->children[0]), ExpressionToNNF(node->children[1]));
+            auto right_and = create_and(ExpressionToNNF(not_a), ExpressionToNNF(not_b));
 
-            auto right_and = std::make_shared<Node>(Operator::AND);
-            right_and->children.push_back(ExpressionToNNF(not_a));
-            right_and->children.push_back(ExpressionToNNF(not_b));
-
-            auto or_node = std::make_shared<Node>(Operator::OR);
-            or_node->children.push_back(left_and);
-            or_node->children.push_back(right_and);
+            auto or_node = create_or(left_and, right_and);
             return or_node;
         }
         default:
@@ -625,6 +607,55 @@ inline std::shared_ptr<Node> ExpressionToCONDF(std::shared_ptr<Node> node) {
 inline std::shared_ptr<Node> ExpressionToNORF(std::shared_ptr<Node> node) {
     if(node->is_literal())
         return node;
+
+    Operator op = node->get_operator();
+
+    switch(op) {
+        case(Operator::NOT): {
+            auto child = ExpressionToNORF(node->children[0]);
+            return create_nor(child, child);
+        }
+        case(Operator::AND): {
+            auto left = ExpressionToNORF(node->children[0]);
+            auto right = ExpressionToNORF(node->children[1]);
+
+            auto left_nor = create_nor(left, left);
+            auto right_nor = create_nor(right, right);
+
+            return create_nor(left_nor, right_nor);
+        }
+        case(Operator::OR): {
+            auto left = ExpressionToNORF(node->children[0]);
+            auto right = ExpressionToNORF(node->children[1]);
+
+            auto left_nor = create_nor(left, right);
+            auto right_nor = create_nor(left, right);
+
+            return create_nor(left_nor, right_nor);
+        }
+        case(Operator::IMPLY): {
+            auto left = ExpressionToNORF(node->children[0]);
+            auto right = ExpressionToNORF(node->children[1]);
+
+            auto right_nor = create_nor(right, right);
+
+            return create_nor(left, right_nor);
+        }
+        case(Operator::IFF): {
+            auto left = ExpressionToNORF(node->children[0]);
+            auto right = ExpressionToNORF(node->children[1]);
+
+            auto not_left = create_nor(left, left);
+            auto not_right = create_nor(right, right);
+
+            auto left_implies_right = create_nor(left, not_right);
+            auto right_implies_left = create_nor(right, not_left);
+
+            return create_nor(left_implies_right, right_implies_left);
+        }
+        default:
+            return node->clone();
+    }
 }
 
 inline std::shared_ptr<Node> (*ExpressionToPierceForm)(std::shared_ptr<Node>) = ExpressionToNORF;

@@ -126,9 +126,11 @@ int main(int argc, char **argv) {
     // Example usage of the smol pp way (mortal)
     //
 
+    std::string global_str = "(A = B) & (!C | D) > !(!(A & !(C | B & D)) & !B)";
+
     // 1.
     spart( //
-        Formula formula("!(A & B) | C");
+        Formula formula(global_str);
         //
     );
 
@@ -147,7 +149,7 @@ int main(int argc, char **argv) {
 
     // 3.
     spart( //
-        Formula formula("(A = B) & (!C | D) > !(A & !B)");
+        Formula formula(global_str);
 
         Formula nem_es = formula.NemÉs();
 
@@ -159,7 +161,7 @@ int main(int argc, char **argv) {
 
     // 4.
     spart( //
-        Formula formula("(A = B) & (!C | D) > !(A & !B)");
+        Formula formula(global_str);
 
         Formula nem_vagy = formula.NemVagy();
 
@@ -171,7 +173,7 @@ int main(int argc, char **argv) {
 
     // 5.
     spart( //
-        Formula formula("(A = B) & (!C | D) > !(!(A & !(C | B & D)) & !B)");
+        Formula formula(global_str);
 
         Formula nem_akkor = formula.NemAkkor();
 
@@ -183,7 +185,7 @@ int main(int argc, char **argv) {
 
     // 6.
     spart( //
-        Formula formula("(A = B) & (!C | D) > !(A & !B)");
+        Formula formula(global_str);
 
         Formula fals_akkor = formula.FalsAkkor();
 
@@ -195,7 +197,7 @@ int main(int argc, char **argv) {
 
     // 7.
     spart( //
-        Formula formula("(A = B) & (!C | D) > !(A & !B)");
+        Formula formula(global_str);
 
         Formula sem_sem = formula.SemSem();
 
@@ -207,7 +209,7 @@ int main(int argc, char **argv) {
 
     // 8.
     spart( //
-        Formula formula("(A = B) & (!C | D) > !(A & !B)");
+        Formula formula(global_str);
 
         Formula sheffer = formula.Sheffer();
 
