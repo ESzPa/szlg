@@ -23,6 +23,7 @@ enum class Operator : unsigned char {
 };
 
 enum class Literal : unsigned char {
+    // Variables
     A = 'A',
     B = 'B',
     C = 'C',
@@ -49,13 +50,18 @@ enum class Literal : unsigned char {
     X = 'X',
     Y = 'Y',
     Z = 'Z',
+    // Constants
+    FALSUM = '_',
+    VERUM = '-',
+    // Additional
     NIL = 0,
 };
 
 struct Node;
 
 namespace {
-inline std::string node_to_string(std::shared_ptr<Node> node, int parent_precedence = 0);
+inline std::string node_to_string(std::shared_ptr<Node> node, int parent_precedence = 0,
+                                  bool is_right_child = false);
 }
 
 struct Node {
@@ -280,7 +286,8 @@ inline void apply_operator(unsigned char op_char, std::stack<std::shared_ptr<Nod
     }
 }
 
-inline std::string node_to_string(std::shared_ptr<Node> node, int parent_precedence) {
+inline std::string node_to_string(std::shared_ptr<Node> node, int parent_precedence,
+                                  bool is_right_child) {
     if(node->is_literal()) {
         return std::string(1, LiteralToChar(node->get_literal()));
     }
@@ -289,16 +296,18 @@ inline std::string node_to_string(std::shared_ptr<Node> node, int parent_precede
     int current_precedence = presedence_map.at(op);
 
     if(op == Operator::NOT) {
-        return "!" + node_to_string(node->children[0], current_precedence);
+        return "!" + node_to_string(node->children[0], current_precedence, false);
     }
 
-    std::string left_str = node_to_string(node->children[0], current_precedence);
-    std::string right_str = node_to_string(node->children[1], current_precedence);
+    bool needs_parens = (current_precedence < parent_precedence) ||
+                        (current_precedence == parent_precedence && is_right_child);
+
+    std::string left_str = node_to_string(node->children[0], current_precedence, false);
+    std::string right_str = node_to_string(node->children[1], current_precedence, true);
 
     std::string op_str = std::string(" ") + static_cast<char>(op) + " ";
     std::string result = left_str + op_str + right_str;
 
-    bool needs_parens = (current_precedence < parent_precedence);
     return needs_parens ? "(" + result + ")" : result;
 }
 } // namespace
@@ -716,6 +725,57 @@ inline std::shared_ptr<Node> ExpressionToNANDF(std::shared_ptr<Node> node) {
 }
 
 inline std::shared_ptr<Node> (*ExpressionToShefferForm)(std::shared_ptr<Node>) = ExpressionToNANDF;
+
+// Falsum Conditional Form
+inline std::shared_ptr<Node> ExpressionToFALSCONDF(std::shared_ptr<Node> node) {
+    if(node->is_literal())
+        return node->clone();
+
+    Operator op = node->get_operator();
+    static auto falsum = create_literal(Literal::FALSUM);
+
+    switch(op) {
+        case Operator::NOT: {
+            auto child = ExpressionToFALSCONDF(node->children[0]);
+            return create_imply(child, falsum->clone());
+        }
+        case Operator::AND: {
+            auto left = ExpressionToFALSCONDF(node->children[0]);
+            auto right = ExpressionToFALSCONDF(node->children[1]);
+
+            auto fals_right = create_imply(right, falsum->clone());
+            auto left_implies_fals_right = create_imply(left, fals_right);
+
+            return create_imply(left_implies_fals_right, falsum->clone());
+        }
+        case Operator::OR: {
+            auto left = ExpressionToFALSCONDF(node->children[0]);
+            auto right = ExpressionToFALSCONDF(node->children[1]);
+
+            auto fals_left = create_imply(left, falsum->clone());
+
+            return create_imply(fals_left, right);
+        }
+        case Operator::IMPLY: {
+            auto left = ExpressionToFALSCONDF(node->children[0]);
+            auto right = ExpressionToFALSCONDF(node->children[1]);
+
+            return create_imply(left, right);
+        }
+        case Operator::IFF: {
+            auto left = node->children[0];
+            auto right = node->children[1];
+
+            auto left_implies_right = create_imply(left, right);
+            auto right_implies_left = create_imply(right, left);
+
+            auto and_node = create_and(left_implies_right, right_implies_left);
+            return ExpressionToFALSCONDF(and_node);
+        }
+        default:
+            return node->clone();
+    }
+}
 
 } // namespace logic
 

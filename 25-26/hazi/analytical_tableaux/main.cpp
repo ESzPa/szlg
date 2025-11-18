@@ -61,7 +61,8 @@ class Formula {
     }
 
     Formula FalsAkkor() const {
-        return *this;
+        Formula formula = logic::ExpressionToFALSCONDF(tableaux_.get_formulas()[0]);
+        return formula;
     }
 
     Formula SemSem() const {
