@@ -137,6 +137,10 @@ const std::unordered_map<unsigned char, Operator> char_expr_map = {
     // clang-format on
 };
 
+const std::unordered_map<Operator, std::string> op_display_map = {
+    {Operator::NOT, "¬"},   {Operator::AND, "∧"}, {Operator::OR, "∨"},
+    {Operator::IMPLY, "→"}, {Operator::IFF, "↔"}, {Operator::NIL, ""}};
+
 const std::unordered_map<unsigned char, Literal> char_lit_map = {
     {'A', Literal::A}, {'B', Literal::B}, {'C', Literal::C}, {'D', Literal::D}, {'E', Literal::E},
     {'F', Literal::F}, {'G', Literal::G}, {'H', Literal::H}, {'I', Literal::I}, {'J', Literal::J},
@@ -289,14 +293,18 @@ inline void apply_operator(unsigned char op_char, std::stack<std::shared_ptr<Nod
 inline std::string node_to_string(std::shared_ptr<Node> node, int parent_precedence,
                                   bool is_right_child) {
     if(node->is_literal()) {
-        return std::string(1, LiteralToChar(node->get_literal()));
+        std::string str =
+            (node->get_literal() != Literal::FALSUM && node->get_literal() != Literal::VERUM)
+                ? std::string(1, LiteralToChar(node->get_literal()))
+                : (node->get_literal() == Literal::FALSUM ? "⊥" : "⊤");
+        return str.substr(0, 1);
     }
 
     Operator op = node->get_operator();
     int current_precedence = presedence_map.at(op);
 
     if(op == Operator::NOT) {
-        return "!" + node_to_string(node->children[0], current_precedence, false);
+        return op_display_map.at(op) + node_to_string(node->children[0], current_precedence, false);
     }
 
     bool needs_parens = (current_precedence < parent_precedence) ||
@@ -305,7 +313,7 @@ inline std::string node_to_string(std::shared_ptr<Node> node, int parent_precede
     std::string left_str = node_to_string(node->children[0], current_precedence, false);
     std::string right_str = node_to_string(node->children[1], current_precedence, true);
 
-    std::string op_str = std::string(" ") + static_cast<char>(op) + " ";
+    std::string op_str = " " + op_display_map.at(op) + " ";
     std::string result = left_str + op_str + right_str;
 
     return needs_parens ? "(" + result + ")" : result;
