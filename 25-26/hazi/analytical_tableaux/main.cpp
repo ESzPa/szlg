@@ -55,6 +55,25 @@ class Formula {
         return formula;
     }
 
+    Formula NemAkkor() const {
+        Formula formula = logic::ExpressionToCONDF(tableaux_.get_formulas()[0]);
+        return formula;
+    }
+
+    Formula FalsAkkor() const {
+        return *this;
+    }
+
+    Formula SemSem() const {
+        Formula formula = logic::ExpressionToPierceForm(tableaux_.get_formulas()[0]);
+        return formula;
+    }
+
+    Formula Sheffer() const {
+        Formula formula = logic::ExpressionToShefferForm(tableaux_.get_formulas()[0]);
+        return formula;
+    }
+
     std::shared_ptr<logic::Node> get() const {
         return tableaux_.get_formulas()[0];
     }
@@ -128,23 +147,73 @@ int main(int argc, char **argv) {
 
     // 3.
     spart( //
-        Formula formula("(A = B) & (!C | D)");
+        Formula formula("(A = B) & (!C | D) > !(A & !B)");
 
         Formula nem_es = formula.NemÉs();
 
-        std::cout << "3. NemÉs\n(A = B) & (!C | D)\n"
+        std::cout << "3. NemÉs\n"
+                  << formula << '\n'
                   << nem_es << '\n';
         //
     );
 
     // 4.
     spart( //
-        Formula formula("(A = B) & (!C | D)");
+        Formula formula("(A = B) & (!C | D) > !(A & !B)");
 
         Formula nem_vagy = formula.NemVagy();
 
-        std::cout << "4. NemVagy\n(A = B) & (!C | D)\n"
+        std::cout << "4. NemVagy\n"
+                  << formula << '\n'
                   << nem_vagy << '\n';
+        //
+    );
+
+    // 5.
+    spart( //
+        Formula formula("(A = B) & (!C | D) > !(!(A & !(C | B & D)) & !B)");
+
+        Formula nem_akkor = formula.NemAkkor();
+
+        std::cout << "5. NemAkkor\n"
+                  << formula << '\n'
+                  << nem_akkor << '\n';
+        //
+    );
+
+    // 6.
+    spart( //
+        Formula formula("(A = B) & (!C | D) > !(A & !B)");
+
+        Formula fals_akkor = formula.FalsAkkor();
+
+        std::cout << "6. FalsAkkor\n"
+                  << formula << '\n'
+                  << fals_akkor << '\n';
+        //
+    );
+
+    // 7.
+    spart( //
+        Formula formula("(A = B) & (!C | D) > !(A & !B)");
+
+        Formula sem_sem = formula.SemSem();
+
+        std::cout << "7. SemSem\n"
+                  << formula << '\n'
+                  << sem_sem << '\n';
+        //
+    );
+
+    // 8.
+    spart( //
+        Formula formula("(A = B) & (!C | D) > !(A & !B)");
+
+        Formula sheffer = formula.Sheffer();
+
+        std::cout << "8. Sheffer\n"
+                  << formula << '\n'
+                  << sheffer << '\n';
         //
     );
 

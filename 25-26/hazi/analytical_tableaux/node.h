@@ -580,10 +580,45 @@ inline std::shared_ptr<Node> ExpressionToORF(std::shared_ptr<Node> node) {
 }
 
 // Conditional Form
-inline std::shared_ptr<Node> ExpressionToCONDF(std::shared_ptr<Node> node) {
+inline std::shared_ptr<Node> ExpressionToCONDF_FromNNF(std::shared_ptr<Node> node) {
     if(node->is_literal())
-        return node;
-    // First NNF
+        return node->clone();
+
+    Operator op = node->get_operator();
+
+    switch(op) {
+        case Operator::NOT: {
+            auto child = ExpressionToCONDF_FromNNF(node->children[0]);
+
+            if(child->is_operator() && child->get_operator() == Operator::NOT) {
+                return child->children[0];
+            }
+            return create_not(child);
+        }
+        case Operator::AND: {
+            auto left = node->children[0];
+            auto right = node->children[1];
+
+            auto not_right = create_not(right);
+            auto imply_node =
+                create_imply(ExpressionToCONDF_FromNNF(left), ExpressionToCONDF_FromNNF(not_right));
+            auto not_node = create_not(imply_node);
+            return not_node;
+        }
+        case Operator::OR: {
+            auto left = node->children[0];
+            auto right = node->children[1];
+
+            auto not_left = create_not(left);
+            return create_imply(ExpressionToCONDF_FromNNF(not_left), ExpressionToCONDF_FromNNF(right));
+        }
+        default:
+            return node->clone();
+    }
+}
+
+inline std::shared_ptr<Node> ExpressionToCONDF(std::shared_ptr<Node> node) {
+    return ExpressionToCONDF_FromNNF(ExpressionToNNF(node));
 }
 
 // NOR / Peirce Form
@@ -591,6 +626,7 @@ inline std::shared_ptr<Node> ExpressionToNORF(std::shared_ptr<Node> node) {
     if(node->is_literal())
         return node;
 }
+
 inline std::shared_ptr<Node> (*ExpressionToPierceForm)(std::shared_ptr<Node>) = ExpressionToNORF;
 
 // NAND / Sheffer Form
@@ -598,6 +634,7 @@ inline std::shared_ptr<Node> ExpressionToNANDF(std::shared_ptr<Node> node) {
     if(node->is_literal())
         return node;
 }
+
 inline std::shared_ptr<Node> (*ExpressionToShefferForm)(std::shared_ptr<Node>) = ExpressionToNANDF;
 
 } // namespace logic
