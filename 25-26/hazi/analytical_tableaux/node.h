@@ -293,7 +293,7 @@ inline std::string node_to_string(std::shared_ptr<Node> node, int parent_precede
             (node->get_literal() != Literal::FALSUM && node->get_literal() != Literal::VERUM)
                 ? std::string(1, LiteralToChar(node->get_literal()))
                 : (node->get_literal() == Literal::FALSUM ? "⊥" : "⊤");
-        return str.substr(0, 1);
+        return str;
     }
 
     Operator op = node->get_operator();
