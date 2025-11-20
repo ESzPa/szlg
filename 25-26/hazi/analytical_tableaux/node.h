@@ -118,22 +118,22 @@ const std::unordered_set<Operator> unary_operators_map = {Operator::NOT};
 const std::unordered_set<Operator> binary_operators_map = {Operator::AND, Operator::OR, Operator::IFF,
                                                            Operator::IMPLY};
 
-const std::unordered_map<unsigned char, Operator> char_expr_map = {
+const std::unordered_map<std::string, Operator> str_op_map = {
     // clang-format off
-    {'!', Operator::NOT},
-    //{U'¬', Operator::NOT}, 
-    {'~', Operator::NOT},   
-    {'&', Operator::AND},
-    //{U'∧', Operator::AND}, 
-    {'|', Operator::OR},  
-    //{U'∨', Operator::OR},    
-    {'>', Operator::IMPLY},
-    //{U'→', Operator::IMPLY},
-    //{U'⊃', Operator::IMPLY}, 
-    //{U'⇒', Operator::IMPLY},
-    {'=', Operator::IFF},
-    //{U'↔', Operator::IFF}, 
-    //{U'⇔', Operator::IFF},
+    {"!", Operator::NOT},
+    {"¬", Operator::NOT}, 
+    {"~", Operator::NOT},   
+    {"&", Operator::AND},
+    {"∧", Operator::AND}, 
+    {"|", Operator::OR},  
+    {"∨", Operator::OR},    
+    {">", Operator::IMPLY},
+    {"→", Operator::IMPLY},
+    {"⊃", Operator::IMPLY}, 
+    {"⇒", Operator::IMPLY},
+    {"=", Operator::IFF},
+    {"↔", Operator::IFF}, 
+    {"⇔", Operator::IFF},
     // clang-format on
 };
 
@@ -141,13 +141,13 @@ const std::unordered_map<Operator, std::string> op_display_map = {
     {Operator::NOT, "¬"},   {Operator::AND, "∧"}, {Operator::OR, "∨"},
     {Operator::IMPLY, "→"}, {Operator::IFF, "↔"}, {Operator::NIL, ""}};
 
-const std::unordered_map<unsigned char, Literal> char_lit_map = {
-    {'A', Literal::A}, {'B', Literal::B}, {'C', Literal::C}, {'D', Literal::D}, {'E', Literal::E},
-    {'F', Literal::F}, {'G', Literal::G}, {'H', Literal::H}, {'I', Literal::I}, {'J', Literal::J},
-    {'K', Literal::K}, {'L', Literal::L}, {'M', Literal::M}, {'N', Literal::N}, {'O', Literal::O},
-    {'P', Literal::P}, {'Q', Literal::Q}, {'R', Literal::R}, {'S', Literal::S}, {'T', Literal::T},
-    {'U', Literal::U}, {'V', Literal::V}, {'W', Literal::W}, {'X', Literal::X}, {'Y', Literal::Y},
-    {'Z', Literal::Z},
+const std::unordered_map<std::string, Literal> str_lit_map = {
+    {"A", Literal::A}, {"B", Literal::B}, {"C", Literal::C}, {"D", Literal::D}, {"E", Literal::E},
+    {"F", Literal::F}, {"G", Literal::G}, {"H", Literal::H}, {"I", Literal::I}, {"J", Literal::J},
+    {"K", Literal::K}, {"L", Literal::L}, {"M", Literal::M}, {"N", Literal::N}, {"O", Literal::O},
+    {"P", Literal::P}, {"Q", Literal::Q}, {"R", Literal::R}, {"S", Literal::S}, {"T", Literal::T},
+    {"U", Literal::U}, {"V", Literal::V}, {"W", Literal::W}, {"X", Literal::X}, {"Y", Literal::Y},
+    {"Z", Literal::Z},
 };
 
 const std::unordered_map<Operator, uint8_t> presedence_map = {
@@ -166,20 +166,16 @@ inline bool has_higher_presedence(Operator op1, Operator op2) {
 }
 } // namespace
 
-inline Operator CharToOperator(unsigned char chr) {
-    if(!char_expr_map.count(chr))
+inline Operator char_to_op(std::string chr) {
+    if(!str_op_map.count(chr))
         return Operator::NIL;
-    return char_expr_map.at(chr);
+    return str_op_map.at(chr);
 }
 
-inline unsigned char OperatorToChar(Operator exprt) {
-    return static_cast<unsigned char>(exprt);
-}
-
-inline Literal CharToLiteral(unsigned char chr) {
-    if(!char_lit_map.count(chr))
+inline Literal char_to_lit(std::string chr) {
+    if(!str_lit_map.count(chr))
         return Literal::NIL;
-    return char_lit_map.at(chr);
+    return str_lit_map.at(chr);
 }
 
 inline unsigned char LiteralToChar(Literal lit) {
@@ -244,8 +240,8 @@ inline std::shared_ptr<Node> create_nor(std::shared_ptr<Node> left, std::shared_
 }
 
 namespace {
-inline void apply_operator(unsigned char op_char, std::stack<std::shared_ptr<Node>> &output_stack) {
-    Operator op = CharToOperator(op_char);
+inline void apply_operator(std::string op_char, std::stack<std::shared_ptr<Node>> &output_stack) {
+    Operator op = char_to_op(op_char);
 
     switch(op) {
         case Operator::NOT: {
@@ -318,49 +314,72 @@ inline std::string node_to_string(std::shared_ptr<Node> node, int parent_precede
 
     return needs_parens ? "(" + result + ")" : result;
 }
+
+size_t get_utf8_char_length(const std::string &str, size_t byte_pos) {
+    if(byte_pos >= str.length())
+        return 0;
+
+    unsigned char c = str[byte_pos];
+    if(c < 0x80)
+        return 1;
+    else if((c & 0xE0) == 0xC0)
+        return 2;
+    else if((c & 0xF0) == 0xE0)
+        return 3;
+    else if((c & 0xF8) == 0xF0)
+        return 4;
+    else
+        return 1;
+}
+
+std::string get_utf8_char_at_byte(const std::string &str, size_t byte_pos) {
+    size_t len = get_utf8_char_length(str, byte_pos);
+    return str.substr(byte_pos, len);
+}
 } // namespace
 
 inline std::shared_ptr<Node> parse_expression(const std::string &expr) {
     std::stack<std::shared_ptr<Node>> output_stack;
-    std::stack<unsigned char> operator_stack;
+    std::stack<std::string> operator_stack;
 
     bool expect_operand = true;
-    size_t pos = 0;
-    while(pos < expr.size()) {
-        unsigned char c = expr.at(pos);
+    size_t byte_pos = 0;
+    while(byte_pos < expr.size()) {
+        std::string c = get_utf8_char_at_byte(expr, byte_pos);
+        size_t char_len = c.length();
 
-        if(std::isspace(c)) {
-            ++pos;
+        if(char_len == 1 && std::isspace(c[0])) {
+            byte_pos += char_len;
             continue;
         }
 
         if(expect_operand) {
-            if(c == '(') {
+            if(c == "(") {
                 operator_stack.push(c);
-                pos++;
+                byte_pos += char_len;
                 continue;
             }
 
-            if(unary_operators_map.count(CharToOperator(c))) {
+            if(unary_operators_map.count(char_to_op(c))) {
                 operator_stack.push(c);
-                ++pos;
+                byte_pos += char_len;
                 continue;
             }
 
-            if(std::isalpha(c) && std::isupper(c)) {
-                Literal lit = CharToLiteral(static_cast<unsigned char>(c));
+            if(std::isalpha(c.at(0)) && std::isupper(c.at(0))) {
+                Literal lit = char_to_lit(c);
                 output_stack.push(create_literal(lit));
                 expect_operand = false;
-                ++pos;
+                byte_pos += char_len;
                 continue;
             }
 
-            throw std::runtime_error(std::string("Expected operand, found: '") + static_cast<char>(c) +
-                                     "' at position " + std::to_string(pos));
+            throw std::runtime_error(std::string("Expected operand, found: '") + c + "' at position " +
+                                     std::to_string(byte_pos));
         }
         else {
-            if(c == ')') {
-                while(!operator_stack.empty() && operator_stack.top() != '(') {
+            if(c == ")") {
+                while(!operator_stack.empty() && operator_stack.top() != "(") {
                     apply_operator(operator_stack.top(), output_stack);
                     operator_stack.pop();
                 }
@@ -369,29 +388,29 @@ inline std::shared_ptr<Node> parse_expression(const std::string &expr) {
                 }
                 operator_stack.pop();
                 expect_operand = false;
-                pos++;
+                byte_pos += char_len;
                 continue;
             }
 
-            if(binary_operators_map.count(CharToOperator(c))) {
-                while(!operator_stack.empty() && operator_stack.top() != '(' &&
-                      has_higher_presedence(CharToOperator(operator_stack.top()), CharToOperator(c))) {
+            if(binary_operators_map.count(char_to_op(c))) {
+                while(!operator_stack.empty() && operator_stack.top() != "(" &&
+                      has_higher_presedence(char_to_op(operator_stack.top()), char_to_op(c))) {
                     apply_operator(operator_stack.top(), output_stack);
                     operator_stack.pop();
                 }
                 operator_stack.push(c);
                 expect_operand = true;
-                ++pos;
+                byte_pos += char_len;
                 continue;
             }
 
-            throw std::runtime_error(std::string("Invalid character: '") + static_cast<char>(c) +
-                                     "' at position " + std::to_string(pos));
+            throw std::runtime_error(std::string("Invalid character: '") + c + "' at position " +
+                                     std::to_string(byte_pos));
         }
     }
 
     while(!operator_stack.empty()) {
-        if(operator_stack.top() == '(') {
+        if(operator_stack.top() == "(") {
             throw std::runtime_error("Mismatched parentheses");
         }
         apply_operator(operator_stack.top(), output_stack);

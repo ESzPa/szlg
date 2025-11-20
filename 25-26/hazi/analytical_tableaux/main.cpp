@@ -127,7 +127,7 @@ int main(int argc, char **argv) {
     // Example usage of the smol pp way (mortal)
     //
 
-    std::string global_str = "(A = B) & (!C | D) > !(!(A & !(C | B & D)) & !B)";
+    std::string global_str = "(A = B) & (¬C | D) > !(!(A & !(C | B & D)) & !B)";
 
     // 1.
     spart( //
@@ -141,7 +141,7 @@ int main(int argc, char **argv) {
 
         formula.Igazságérték("A"); formula.Igazságérték("!B");
         // Or
-        formula.Igazságérték("A & !B");
+        formula.Igazságérték("A ∧ ¬B");
 
         std::cout << "2. ¬A → B Kielégíthető-e, ha A és ¬B: "
                   << (formula.Kielégíthető() ? "Igen\n" : "Nem\n");
