@@ -5,8 +5,8 @@ UseTab: Never
 ColumnLimit: 105
 BreakBeforeBraces: Custom
 AllowShortFunctionsOnASingleLine: None
-PointerAlignment: Right
-ReferenceAlignment: Right
+PointerAlignment: Left
+ReferenceAlignment: Left
 SpaceBeforeParens: Never
 SpaceBeforeAssignmentOperators: true
 IndentCaseLabels: true
