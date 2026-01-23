@@ -132,3 +132,39 @@ inline bool indirect_path_search(const netgraph& graph, int curr, int target, st
     path.pop_back();
     return false;
 }
+
+// 16.
+template <typename Func>
+inline std::vector<int> all_reachable_if(const netgraph& graph, const std::string& name, Func func) {
+    auto it =
+        std::find_if(graph.begin(), graph.end(), [&name](const pupil& p) { return p.name == name; });
+
+    std::queue<int> q;
+    std::vector<bool> visited(graph.size(), false);
+    std::vector<int> res;
+
+    int src = it - graph.begin();
+    visited[src] = true;
+    q.push(src);
+
+    while(!q.empty()) {
+        int curr = q.front();
+        q.pop();
+        res.push_back(curr);
+
+        for(auto b : graph[curr].buddies) {
+            if(!visited[b]) {
+                visited[b] = true;
+                q.push(b);
+            }
+        }
+    }
+
+    for(auto b : res) {
+        if(!func(it - graph.begin(), b)) {
+            res.erase(std::remove(res.begin(), res.end(), b), res.end());
+        }
+    }
+
+    return res;
+}

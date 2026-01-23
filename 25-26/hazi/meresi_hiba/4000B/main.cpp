@@ -170,5 +170,21 @@ int main(int argc, char** argv) {
         }
     }
 
+    // 16.
+    {
+        std::vector<int> res = all_reachable_if(
+            graph, "Feles Elek", [&graph](int t, int c) { return graph[t].nyelv2 == graph[c].nyelv2; });
+        std::vector<int> all;
+        auto it = std::find_if(graph.begin(), graph.end(),
+                               [](const pupil& p) { return p.name == "Feles Elek"; });
+        for(int i = 0; i < graph.size(); ++i) {
+            if(graph[i].nyelv2 == it->nyelv2) {
+                all.push_back(i);
+            }
+        }
+
+        std::cout << "16.\n" << (all.size() == res.size() ? "Igen" : "Nem") << "\n\n";
+    }
+
     return 0;
 }
