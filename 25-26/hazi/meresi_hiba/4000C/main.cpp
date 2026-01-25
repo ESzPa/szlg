@@ -40,6 +40,15 @@ int main(int argc, char** argv) {
     print_next([&graph]() { std::cout << distance_of_closest(graph, "Szeged"); });            // 9.
     print_next([&graph]() { std::cout << distance_of_farthest(graph, "Hodmezovasarhely"); }); // 10.
     print_next([&graph]() { std::cout << avg_road_lengths(graph, "Szeged"); });               // 11.
+    print_next(
+        [&graph]() { std::cout << internal::it_from_name(graph, "Kiralyhegyes")->roads.size(); }); // 12.
+    print_next([&graph]() { std::cout << graph[idx_max_neighbours(graph)].name; });                // 13.
+    print_next([&graph]() { print_vec(it_settlements_with_neighbours(graph, 1)); });               // 14.
+    print_next([&graph]() { std::cout << shortest_path(graph, "Nagylak", "Szentes").size(); });    // 15.
+    print_next([&graph]() { print_vec(shortest_path(graph, "Nagylak", "Szentes")); });             // 16.
+    print_next([&graph]() { print_vec(shortest_path(graph, "Roszke", "Eperjes")); });              // 17.
+    print_next([&graph]() { print_vec(dijkstra(graph, "Tomorkeny", "Kiszombor")); });              // 18.
+    print_next([&graph]() { print_vec(dijkstra(graph, "Baks", "Mindszent")); });                   // 19.
 
     return 0;
 }
