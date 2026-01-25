@@ -1,5 +1,7 @@
 #include <fstream>
+#include <functional>
 #include <iostream>
+#include <numeric>
 #include <sstream>
 #include <string>
 
@@ -8,16 +10,36 @@
 
 settlement_graph parse();
 
+void print_next(std::function<void()> f);
+
 int main(int argc, char** argv) {
     (void)argc;
     (void)argv;
 
     settlement_graph graph = parse();
 
-    // 1.
-    std::cout << "1.\n";
-    // print_graphviz(graph);
-    std::cout << "\n\n";
+    print_next([&graph]() { /*print_graphviz(graph);*/ }); // 1.
+    print_next([&graph]() { std::cout << graph.size(); }); // 2.
+    print_next([&graph]() {                                // 3.
+        std::cout << std::accumulate(
+                         graph.begin(), graph.end(), size_t{0},
+                         [](size_t sum, const settlement& s) { return sum + s.roads.size(); }) /
+                         2;
+    });
+    print_next([&graph]() { std::cout << total_road_len(graph); }); // 4.
+    print_next(
+        [&graph]() { std::cout << std::boolalpha << is_direct_path(graph, "Szeged", "Deszk"); }); // 5.
+    print_next([&graph]() {
+        std::cout << std::boolalpha << is_direct_path(graph, "Szeged", "Hodmezovasarhely"); // 6.
+    });
+    print_next(
+        [&graph]() { std::cout << std::boolalpha << is_direct_path(graph, "Algyor", "Felgyor"); }); // 7.
+    print_next([&graph]() {
+        std::cout << std::boolalpha << is_direct_path(graph, "Pusztaszer", "Opusztaszer"); // 8.
+    });
+    print_next([&graph]() { std::cout << distance_of_closest(graph, "Szeged"); });            // 9.
+    print_next([&graph]() { std::cout << distance_of_farthest(graph, "Hodmezovasarhely"); }); // 10.
+    print_next([&graph]() { std::cout << avg_road_lengths(graph, "Szeged"); });               // 11.
 
     return 0;
 }
@@ -74,4 +96,11 @@ settlement_graph parse() {
     }
 
     return graph;
+}
+
+void print_next(std::function<void()> f) {
+    static size_t counter = 0;
+    std::cout << ++counter << ".\n";
+    f();
+    std::cout << "\n\n";
 }
