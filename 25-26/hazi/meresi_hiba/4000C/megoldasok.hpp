@@ -135,7 +135,8 @@ shortest_path(const settlement_graph& graph, const char* name_from, const char* 
     dist[idx_from] = 0;
     q.push(idx_from);
 
-    while(!q.empty()) {
+    bool f = false;
+    while(!q.empty() && !f) {
         size_t cur = q.front();
         q.pop();
 
@@ -146,6 +147,7 @@ shortest_path(const settlement_graph& graph, const char* name_from, const char* 
                 q.push(r.to);
 
                 if(r.to == idx_target) {
+                    f = true;
                     break;
                 }
             }
@@ -196,6 +198,151 @@ dijkstra(const settlement_graph& graph, const char* name_start, const char* name
         }
 
         for(const auto& r : graph.at(u).roads) {
+            if(dist[r.to] > dist[u] + r.length) {
+                dist[r.to] = dist[u] + r.length;
+                parent[r.to] = (ssize_t)u;
+                pq.push({dist[r.to], r.to});
+            }
+        }
+    }
+
+    std::vector<settlement_graph::const_iterator> path;
+    if(dist[target] == INF) {
+        return path;
+    }
+
+    for(ssize_t idx = (ssize_t)target; idx != -1; idx = parent[idx]) {
+        path.push_back(graph.begin() + idx);
+    }
+
+    std::reverse(path.begin(), path.end());
+    return path;
+}
+
+// 20. ->21.
+inline settlement_graph::const_iterator dijkstra_by_kisterseg(const settlement_graph& graph,
+                                                              const char* name_start,
+                                                              const std::string& kisterseg) {
+    size_t start = internal::idx_from_name(graph, name_start);
+
+    const size_t N = graph.size();
+    constexpr size_t INF = std::numeric_limits<size_t>::max();
+
+    std::vector<size_t> dist(N, INF);
+    std::vector<ssize_t> parent(N, -1);
+
+    using state = std::pair<size_t, size_t>;
+    std::priority_queue<state, std::vector<state>, std::greater<>> pq;
+
+    dist[start] = 0;
+    pq.push({0, start});
+
+    size_t last;
+    while(!pq.empty()) {
+        auto [d, u] = pq.top();
+        pq.pop();
+        last = u;
+
+        if(d > dist[u]) {
+            continue;
+        }
+
+        if(graph[u].kisterseg == kisterseg) {
+            break;
+        }
+
+        for(const auto& r : graph.at(u).roads) {
+            if(dist[r.to] > dist[u] + r.length) {
+                dist[r.to] = dist[u] + r.length;
+                parent[r.to] = (ssize_t)u;
+                pq.push({dist[r.to], r.to});
+            }
+        }
+    }
+
+    return last + graph.begin();
+}
+
+// 22. -> 23.
+inline std::vector<settlement_graph::const_iterator>
+dijkstra_collection(const settlement_graph& graph, const char* name_start, size_t distance) {
+    std::vector<settlement_graph::const_iterator> res;
+    size_t start = internal::idx_from_name(graph, name_start);
+
+    const size_t N = graph.size();
+    constexpr size_t INF = std::numeric_limits<size_t>::max();
+
+    std::vector<size_t> dist(N, INF);
+    std::vector<ssize_t> parent(N, -1);
+
+    using state = std::pair<size_t, size_t>;
+    std::priority_queue<state, std::vector<state>, std::greater<>> pq;
+
+    dist[start] = 0;
+    pq.push({0, start});
+
+    while(!pq.empty()) {
+        auto [d, u] = pq.top();
+        pq.pop();
+
+        if(d > dist[u]) {
+            continue;
+        }
+
+        if(dist[u] > distance) {
+            break;
+        }
+
+        res.push_back(graph.begin() + u);
+
+        for(const auto& r : graph.at(u).roads) {
+            if(dist[r.to] > dist[u] + r.length) {
+                dist[r.to] = dist[u] + r.length;
+                parent[r.to] = (ssize_t)u;
+                pq.push({dist[r.to], r.to});
+            }
+        }
+    }
+
+    return res;
+}
+
+// 24.
+inline std::vector<settlement_graph::const_iterator> dijkstra_avoid(const settlement_graph& graph,
+                                                                    const char* name_start,
+                                                                    const char* name_target,
+                                                                    const std::string& kisterseg) {
+    size_t start = internal::idx_from_name(graph, name_start);
+    size_t target = internal::idx_from_name(graph, name_target);
+
+    const size_t N = graph.size();
+    constexpr size_t INF = std::numeric_limits<size_t>::max();
+
+    std::vector<size_t> dist(N, INF);
+    std::vector<ssize_t> parent(N, -1);
+
+    using state = std::pair<size_t, size_t>;
+    std::priority_queue<state, std::vector<state>, std::greater<>> pq;
+
+    dist[start] = 0;
+    pq.push({0, start});
+
+    while(!pq.empty()) {
+        auto [d, u] = pq.top();
+        pq.pop();
+
+        if(d > dist[u]) {
+            continue;
+        }
+
+        if(u == target) {
+            break;
+        }
+
+        for(const auto& r : graph.at(u).roads) {
+            if(graph.at(r.to).kisterseg == kisterseg) {
+                continue;
+            }
             if(dist[r.to] > dist[u] + r.length) {
                 dist[r.to] = dist[u] + r.length;
                 parent[r.to] = (ssize_t)u;

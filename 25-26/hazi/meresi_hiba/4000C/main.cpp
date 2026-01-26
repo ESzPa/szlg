@@ -49,6 +49,20 @@ int main(int argc, char** argv) {
     print_next([&graph]() { print_vec(shortest_path(graph, "Roszke", "Eperjes")); });              // 17.
     print_next([&graph]() { print_vec(dijkstra(graph, "Tomorkeny", "Kiszombor")); });              // 18.
     print_next([&graph]() { print_vec(dijkstra(graph, "Baks", "Mindszent")); });                   // 19.
+    print_next(
+        [&graph]() { std::cout << dijkstra_by_kisterseg(graph, "Szeged", "Szentes")->name; }); // 20.
+    print_next(
+        [&graph]() { std::cout << dijkstra_by_kisterseg(graph, "Szeged", "Szentes")->name; });   // 21.
+    print_next([&graph]() { std::cout << dijkstra_collection(graph, "Szeged", 30000).size(); }); // 22.
+    print_next([&graph]() {                                                                      // 23.
+        auto g = dijkstra_collection(graph, "Hodmezovasarhely", 40000);
+        std::cout << std::accumulate(
+            g.begin(), g.end(), size_t{0},
+            [](size_t sum, const settlement_graph::const_iterator& it) { return sum + it->population; });
+    });
+    print_next([&graph]() {
+        print_vec(dijkstra_avoid(graph, "Nagymagocs", "Szeged", "Hodmezovasarhelyi")); // 24.
+    });
 
     return 0;
 }
