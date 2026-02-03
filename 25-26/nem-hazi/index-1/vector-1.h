@@ -5,18 +5,30 @@
 template <typename T>
 class vector_1 {
   private:
-    typedef std::size_t size_type;
+    typedef std::size_t size_type_;
 
     std::vector<T> vector_;
 
-    size_type index_(size_type index) const {
+    size_type_ index_(size_type_ index) const {
         return index - 1;
     }
 
   public:
-    //// Member functions
+    typedef T value_type;
+    typedef size_type_ size_type;
+    typedef T& reference;
+    typedef const T& const_reference;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
 
-    vector_1(size_type size = 0, const T& fill_val = T()) {
+    typedef typename std::vector<value_type>::iterator iterator;
+    typedef typename std::vector<value_type>::const_iterator const_iterator;
+    typedef typename std::vector<value_type>::reverse_iterator reverse_iterator;
+    typedef typename std::vector<value_type>::const_reverse_iterator const_reverse_iterator;
+
+    // Member functions
+
+    vector_1(size_t size = 0, const T& fill_val = T()) {
         vector_.resize(size, fill_val);
     }
 
@@ -42,45 +54,45 @@ class vector_1 {
         return *this;
     }
 
-    /// Element access
+    // Element access
 
-    T& at(size_type pos) {
+    reference at(size_type pos) {
         return vector_.at(index_(pos));
     }
 
-    const T& at(size_type pos) const {
+    const_reference at(size_type pos) const {
         return vector_.at(index_(pos));
     }
 
-    T& operator[](size_type pos) {
+    reference operator[](size_type pos) {
         return vector_[index_(pos)];
     }
 
-    const T& operator[](size_type pos) const {
+    const_reference operator[](size_type pos) const {
         return vector_[index_(pos)];
     }
 
-    T& front() {
+    reference front() {
         return vector_.front();
     }
 
-    const T& front() const {
+    const_reference front() const {
         return vector_.front();
     }
 
-    T& back() {
+    reference back() {
         return vector_.back();
     }
 
-    const T& back() const {
+    const_reference back() const {
         return vector_.back();
     }
 
-    T* data() {
+    pointer data() {
         return vector_.data();
     }
 
-    const T* data() const {
+    const_pointer data() const {
         return vector_.data();
     }
 
@@ -92,12 +104,7 @@ class vector_1 {
         return vector_;
     }
 
-    /// Iterators
-
-    typedef typename std::vector<T>::iterator iterator;
-    typedef typename std::vector<T>::const_iterator const_iterator;
-    typedef typename std::vector<T>::reverse_iterator reverse_iterator;
-    typedef typename std::vector<T>::const_reverse_iterator const_reverse_iterator;
+    // Iterators
 
     iterator begin() {
         return vector_.begin();
@@ -147,7 +154,7 @@ class vector_1 {
         return vector_.crend();
     }
 
-    /// Capacity
+    // Capacity
 
     bool empty() const {
         return vector_.empty();
@@ -173,7 +180,7 @@ class vector_1 {
         vector_.shrink_to_fit();
     }
 
-    /// Modifiers
+    // Modifiers
 
     void clear() {
         vector_.clear();
