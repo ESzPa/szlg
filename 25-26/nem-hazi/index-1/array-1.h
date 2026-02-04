@@ -133,7 +133,7 @@ class array_1 {
 
     // Operations
 
-    void fill(const T& value) {
+    void fill(const_reference value) {
         array_.fill(value);
     }
 

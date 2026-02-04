@@ -28,7 +28,7 @@ class vector_1 {
 
     // Member functions
 
-    vector_1(size_t size = 0, const T& fill_val = T()) {
+    vector_1(size_type size = 0, const_reference fill_val = T()) {
         vector_.resize(size, fill_val);
     }
 
@@ -186,15 +186,15 @@ class vector_1 {
         vector_.clear();
     }
 
-    iterator insert(const_iterator pos, const T& value) {
+    iterator insert(const_iterator pos, const_reference value) {
         return vector_.insert(pos, value);
     }
 
-    iterator insert(const_iterator pos, T&& value) {
+    iterator insert(const_iterator pos, value_type&& value) {
         return vector_.insert(pos, std::move(value));
     }
 
-    iterator insert(const_iterator pos, size_type count, const T& value) {
+    iterator insert(const_iterator pos, size_type count, const_reference value) {
         return vector_.insert(pos, count, value);
     }
 
@@ -220,7 +220,7 @@ class vector_1 {
         return vector_.erase(first, last);
     }
 
-    void push_back(const T& value) {
+    void push_back(const_reference value) {
         vector_.push_back(value);
     }
 
