@@ -1,4 +1,5 @@
 import { jsxRenderer } from 'hono/jsx-renderer'
+import { Navbar } from './components/navbar'
 
 declare module 'hono' {
     interface ContextRenderer {
@@ -17,7 +18,8 @@ export const renderer = jsxRenderer(({ children, title }) => {
                 <script src="https://cdn.tailwindcss.com"></script>
                 <title>{title ?? 'Primus'}</title>
             </head>
-            <body>
+            <body className="bg-neutral">
+                <Navbar />
                 {children}
             </body>
         </html>
