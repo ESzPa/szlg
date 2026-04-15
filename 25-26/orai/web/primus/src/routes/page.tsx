@@ -1,13 +1,17 @@
 import { Hono } from 'hono'
+import { Navbar } from '../components/navbar'
 
 const app = new Hono()
 
 app.get('/', (c) => {
     return c.render(
-        <div>
-            <h1>Page</h1>
-            <p>Page of this site.</p>
-        </div>,
+        <>
+            <Navbar />
+            <main className="bg-primary">
+                <h1>Page</h1>
+                <p>Page of this site.</p>
+            </main>
+        </>,
         { title: 'Page' }
     )
 })
