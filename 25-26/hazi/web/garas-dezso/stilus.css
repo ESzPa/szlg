@@ -1,0 +1,78 @@
+body {
+    font-family: 'Times New Roman', serif;
+    display: flex;
+    flex-direction: column;   
+    align-items: center;
+}
+
+h1 {
+    margin: 10px 0 0 0;
+}
+
+.tartalom {
+    background-color: #CCC;
+    color: black;
+    width: 700px;
+    padding: 10px;
+}
+
+.tartalom p {
+    padding: 0px 5px;
+}
+
+.forras {
+    clear:both;
+    background-color: #757575;
+    color: white;
+    width: 700px;
+    padding: 10px;
+}
+
+.forras p {
+    padding: 0px 5px;
+}
+
+.elso {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.szoveg {
+    flex: 1;
+}
+
+.adatok {
+    width: 130px;
+    border-left: 3px solid black;
+    padding: 0 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center;
+}
+
+.adatok img {
+    width: 100px;
+    border: 2px solid white;
+}
+
+.adatok p {
+    margin: 2px 0px;
+}
+
+img.szerepek{
+    width: 100%;
+}
+
+/*
+p {
+}
+
+img.elsok {
+}
+
+
+
+
+*/
