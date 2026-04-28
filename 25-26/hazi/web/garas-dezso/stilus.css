@@ -32,7 +32,7 @@ h1 {
     padding: 0px 5px;
 }
 
-.elso {
+.top {
     display: flex;
     align-items: flex-start;
     gap: 20px;
@@ -65,14 +65,21 @@ img.szerepek{
     width: 100%;
 }
 
-/*
-p {
-}
-
 img.elsok {
+    width: 100px;
+    border: 2px solid white;
 }
 
+.elso {
+    width: 110px;
+    text-align: center;
+}
 
-
-
-*/
+.dijazottak {
+    width: 700px;
+    flex-direction: row;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-left: none;
+}
