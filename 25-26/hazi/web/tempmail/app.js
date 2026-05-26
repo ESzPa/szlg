@@ -9,16 +9,33 @@ async function handleResponse(response) {
     let errorMessage = `Error ${response.status}`;
     try {
         const errorData = await response.json();
-        errorMessage = errorData["hydra:description"] || errorData.message || errorMessage;
+        errorMessage = errorData["hydra:description"];
     } catch (e) {
-        if (response.status === 400) errorMessage = "Bad request - Something in the payload is missing.";
-        if (response.status === 401) errorMessage = "Unauthorized - Missing or invalid login token.";
-        if (response.status === 404) errorMessage = "Not found - Resource does not exist.";
-        if (response.status === 422) errorMessage = "Unprocessable entity - Invalid email structure or domain choice.";
-        if (response.status === 429) errorMessage = "Too many requests - Rate limit exceeded (Max 8 requests/sec).";
+        if (response.status === 400) errorMessage = "Bad request.";
+        if (response.status === 401) errorMessage = "Invalid login token.";
+        if (response.status === 404) errorMessage = "Not found.";
+        if (response.status === 422) errorMessage = "Invalid email structure or domain.";
+        if (response.status === 429) errorMessage = "Too many requests (Max 8 requests/sec).";
     }
 
     throw new Error(errorMessage);
+}
+
+function randBase32Char() {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    return chars[Math.floor(Math.random() * chars.length)];
+}
+
+function randPad(str, len) {
+    if (str.length >= len) {
+        return str;
+    }
+    const tlen = str.len - len;
+    let pad = "";
+    for (let i = 0; i < tlen; i++) {
+        pad += randBase32Char();
+    }
+    return str + pad;
 }
 
 async function createTempMail() {
@@ -37,13 +54,13 @@ async function createTempMail() {
         const domainIdx = Math.floor(Math.random() * availableDomains.length);
         const domain = availableDomains[domainIdx].domain;
 
-        const USE_STATIC_NAME = true;
+        const USE_STATIC_NAME = false;
 
         let username;
         if (USE_STATIC_NAME) {
             username = "johndoehasapork";
         } else {
-            username = `user${Date.now()}`;
+            username = `usr_${randPad(Date.now().toString(32))}`;
         }
 
         email = `${username}@${domain}`;
