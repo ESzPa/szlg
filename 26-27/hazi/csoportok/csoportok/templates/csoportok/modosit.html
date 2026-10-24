@@ -1,0 +1,14 @@
+{% extends "csoportok/base.html" %}
+{% block title %}{{ cim }}{% endblock %}
+{% block content %}
+<h1>{{ cim }}</h1>
+<p>{{ leiras }}</p>
+{% if modositott is not None %}
+  <p class="ok">A módosítás lefutott: <strong>{{ modositott }}</strong> sor frissült.</p>
+{% else %}
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Módosító lekérdezés futtatása</button>
+  </form>
+{% endif %}
+{% endblock %}

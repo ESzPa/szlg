@@ -1,0 +1,11 @@
+{% extends "csoportok/base.html" %}
+{% block title %}{{ cim }}{% endblock %}
+{% block content %}
+<h1>{{ cim }}</h1>
+<p>{{ leiras }}</p>
+<table>
+  <tr><th>nev</th></tr>
+  {% for n in nevek %}<tr><td>{{ n }}</td></tr>{% empty %}<tr><td>– nincs találat –</td></tr>{% endfor %}
+</table>
+<p>{{ nevek|length }} találat</p>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "csoportok/base.html" %}
+{% block title %}5bontas{% endblock %}
+{% block content %}
+<h1>5bontas</h1>
+<p>Diákok névsorban, matematika › angol › 2. idegen nyelv szerint csoportosítva.</p>
+{% for m in fa %}
+  <h2>Matematika: {{ m.nev }}</h2>
+  {% for a in m.angolok %}
+    <h3>Angol: {{ a.nev }}</h3>
+    {% for n in a.nyelvek %}
+      <h4>2. nyelv: {{ n.nev }}</h4>
+      <ul>{% for d in n.diakok %}<li>{{ d }}</li>{% endfor %}</ul>
+    {% endfor %}
+  {% endfor %}
+{% endfor %}
+{% endblock %}

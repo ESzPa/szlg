@@ -1,0 +1,15 @@
+{% extends "csoportok/base.html" %}
+{% block content %}
+<h1>Csoportok</h1>
+<ul>
+  <li><a href="{% url 'csoportok:import_adatok' %}">import</a> – adatok.txt betöltése (textarea)</li>
+  <li><a href="{% url 'csoportok:sok2' %}">2sok</a> – több mint 1 testvér</li>
+  <li><a href="{% url 'csoportok:spec3' %}">3spec</a> – különbség ≠ 3 (darabszám)</li>
+  <li><a href="{% url 'csoportok:kis_kun4' %}">4kis-kun</a> – „4. Kis” → „4. Kun” módosítás</li>
+  <li><a href="{% url 'csoportok:bontas5' %}">5bontas</a> – jelentés: mat › angol › 2. nyelv</li>
+  <li><a href="{% url 'csoportok:izsak6' %}">6izsak</a> – Hát Izsák adatai</li>
+  <li><a href="{% url 'csoportok:kapocs7' %}">7kapocs</a> – Izsák csoporttársai</li>
+  <li><a href="{% url 'csoportok:hianyzo' %}">hianyzo</a> – Bekre adatai</li>
+  <li><a href="{% url 'csoportok:hirvivo' %}">hirvivo</a> – Bekre csoporttársai</li>
+</ul>
+{% endblock %}

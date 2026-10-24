@@ -1,0 +1,16 @@
+{% extends "csoportok/base.html" %}
+{% block title %}{{ cim }}{% endblock %}
+{% block content %}
+<h1>{{ cim }}</h1>
+<p>Másold be az <code>adatok.txt</code> teljes tartalmát (fejléc is kell). Az <strong>adatok</strong> tábla jelenlegi tartalma felülíródik.
+Jelenleg <strong>{{ db }}</strong> sor van az adatbázisban.</p>
+
+{% if betoltve is not None %}<p class="ok">Betöltve: <strong>{{ betoltve }}</strong> sor.</p>{% endif %}
+{% if hiba %}<p style="background:#fde8e8;padding:.6rem 1rem;border-radius:6px">{{ hiba }}</p>{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  <textarea name="szoveg" rows="16" style="width:100%;font-family:monospace" placeholder='"tanulokod";"nev";"mat";"angol";"2nyelv";"tesi";"csaladszam";"tesoszam"&#10;1;"Avon Mór";"alfa";...'>{{ szoveg }}</textarea>
+  <p><button type="submit">Betöltés</button></p>
+</form>
+{% endblock %}
