@@ -7,6 +7,12 @@
 #include "megoldasok.hpp"
 #include "struct.hpp"
 
+inline size_t idx_from_name(const std::vector<pupil>& graph, const std::string& name) {
+    return (std::find_if(graph.begin(), graph.end(),
+                         [&name](const pupil& p) { return p.name == name; })) -
+           graph.begin();
+}
+
 netgraph parse() {
     netgraph graph;
 
